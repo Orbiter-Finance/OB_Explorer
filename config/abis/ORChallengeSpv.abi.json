@@ -1,0 +1,31 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "bytes",
+                "name": "proof",
+                "type": "bytes"
+            },
+            {
+                "internalType": "bytes32[2]",
+                "name": "spvBlockHashs",
+                "type": "bytes32[2]"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "verifyInfoHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "verifyChallenge",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "pure",
+        "type": "function"
+    }
+]

@@ -1,0 +1,1 @@
+export const PERCENT_RATIO_MULTIPLE = 10000

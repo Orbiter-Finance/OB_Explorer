@@ -1,0 +1,828 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "id",
+        "type": "uint64"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "id",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint192",
+            "name": "batchLimit",
+            "type": "uint192"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minVerifyChallengeSourceTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "maxVerifyChallengeSourceTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minVerifyChallengeDestTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "maxVerifyChallengeDestTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address[]",
+            "name": "spvs",
+            "type": "address[]"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct BridgeLib.ChainInfo",
+        "name": "chainInfo",
+        "type": "tuple"
+      }
+    ],
+    "name": "ChainInfoUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint64",
+        "name": "id",
+        "type": "uint64"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "token",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "mainnetToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint8",
+            "name": "decimals",
+            "type": "uint8"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct BridgeLib.TokenInfo",
+        "name": "tokenInfo",
+        "type": "tuple"
+      }
+    ],
+    "name": "ChainTokenUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "challengeUserRatio",
+        "type": "uint64"
+      }
+    ],
+    "name": "ChallengeUserRatioUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "ebcs",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool[]",
+        "name": "statuses",
+        "type": "bool[]"
+      }
+    ],
+    "name": "EbcsUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64[]",
+        "name": "chainIds",
+        "type": "uint64[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "extraTransferContracts",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "ExtraTransferContractsUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "feeChallengeSecond",
+        "type": "uint64"
+      }
+    ],
+    "name": "FeeChallengeSecondUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "feeTakeOnChallengeSecond",
+        "type": "uint64"
+      }
+    ],
+    "name": "FeeTakeOnChallengeSecondUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "maxMDCLimit",
+        "type": "uint64"
+      }
+    ],
+    "name": "MaxMDCLimitUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "minChallengeRatio",
+        "type": "uint64"
+      }
+    ],
+    "name": "MinChallengeRatioUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "protocolFee",
+        "type": "uint64"
+      }
+    ],
+    "name": "ProtocolFeeUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "submitter",
+        "type": "address"
+      }
+    ],
+    "name": "SubmitterFeeUpdated",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "challengeUserRatio",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "ebc",
+        "type": "address"
+      }
+    ],
+    "name": "ebcIncludes",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeChallengeSecond",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeTakeOnChallengeSecond",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "id",
+        "type": "uint64"
+      }
+    ],
+    "name": "getChainInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "id",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint192",
+            "name": "batchLimit",
+            "type": "uint192"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minVerifyChallengeSourceTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "maxVerifyChallengeSourceTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minVerifyChallengeDestTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "maxVerifyChallengeDestTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address[]",
+            "name": "spvs",
+            "type": "address[]"
+          }
+        ],
+        "internalType": "struct BridgeLib.ChainInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "id",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint256",
+        "name": "token",
+        "type": "uint256"
+      }
+    ],
+    "name": "getChainTokenInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "token",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "mainnetToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint8",
+            "name": "decimals",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct BridgeLib.TokenInfo",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "chainId",
+        "type": "uint64"
+      }
+    ],
+    "name": "getExtraTransferContract",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVersionAndEnableTime",
+    "outputs": [
+      {
+        "internalType": "uint192",
+        "name": "version",
+        "type": "uint192"
+      },
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maxMDCLimit",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "minChallengeRatio",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "protocolFee",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "id",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint192",
+            "name": "batchLimit",
+            "type": "uint192"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minVerifyChallengeSourceTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "maxVerifyChallengeSourceTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "minVerifyChallengeDestTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "maxVerifyChallengeDestTxSecond",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address[]",
+            "name": "spvs",
+            "type": "address[]"
+          }
+        ],
+        "internalType": "struct BridgeLib.ChainInfo[]",
+        "name": "chains_",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "registerChains",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "submitter",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "id",
+        "type": "uint64"
+      },
+      {
+        "internalType": "address[]",
+        "name": "spvs",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "indexs",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "updateChainSpvs",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64[]",
+        "name": "ids",
+        "type": "uint64[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "token",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "mainnetToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint8",
+            "name": "decimals",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct BridgeLib.TokenInfo[]",
+        "name": "tokenInfos",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "updateChainTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "challengeUserRatio_",
+        "type": "uint64"
+      }
+    ],
+    "name": "updateChallengeUserRatio",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "ebcs_",
+        "type": "address[]"
+      },
+      {
+        "internalType": "bool[]",
+        "name": "statuses",
+        "type": "bool[]"
+      }
+    ],
+    "name": "updateEbcs",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64[]",
+        "name": "chainIds",
+        "type": "uint64[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "extraTransferContracts",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "updateExtraTransferContracts",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "feeChallengeSecond_",
+        "type": "uint64"
+      }
+    ],
+    "name": "updateFeeChallengeSecond",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "feeTakeOnChallengeSecond_",
+        "type": "uint64"
+      }
+    ],
+    "name": "updateFeeTakeOnChallengeSecond",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "maxMDCLimit_",
+        "type": "uint64"
+      }
+    ],
+    "name": "updateMaxMDCLimit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "minChallengeRatio_",
+        "type": "uint64"
+      }
+    ],
+    "name": "updateMinChallengeRatio",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "protocolFee_",
+        "type": "uint64"
+      }
+    ],
+    "name": "updateProtocolFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      },
+      {
+        "internalType": "address",
+        "name": "submitter_",
+        "type": "address"
+      }
+    ],
+    "name": "updateSubmitter",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "enableTime",
+        "type": "uint64"
+      }
+    ],
+    "name": "versionIncreaseAndEnableTime",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
