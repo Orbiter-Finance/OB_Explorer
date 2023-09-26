@@ -356,53 +356,43 @@ export function DealerHistoryProfitWithdraw(
   }
 
   const onWithDraw = async (): Promise<{ hash: Hash } | any> => {
-    return new Promise(async (resolve, reject) => {
-      const proofTokens = getProofTokens()
-      const getProfitProofParams = {
-        tokens: proofTokens,
-        user: account.address!,
-      }
-      const proofRes =
-        await submitter_getProfitProof<ProfitProofResult>(getProfitProofParams)
-      const {
-        data: { result = [] },
-      } = proofRes
-      const {
-        smtLeaves,
-        siblings,
-        startIndex,
-        firstZeroBits,
-        bitmaps,
-        withdrawAmount,
-      } = getWithDrawParams(result)
-      const withdrawLockData = (await withdrawLockCheck()).data
-      if (withdrawLockData) {
-        resolve(
-          toast({
-            variant: 'destructive',
-            title:
-              'Multiple withdrawals are not allowed within the same withdrawal timeframe.',
-          }),
-        )
-      } else {
-        try {
-          resolve(
-            await withdrawVerification({
-              args: [
-                smtLeaves,
-                getEncodeSbilings(siblings),
-                startIndex,
-                firstZeroBits,
-                bitmaps,
-                withdrawAmount,
-              ],
-            }),
-          )
-        } catch (error) {
-          reject(error)
-        }
-      }
-    })
+    const proofTokens = getProofTokens()
+    const getProfitProofParams = {
+      tokens: proofTokens,
+      user: account.address!,
+    }
+    const proofRes =
+      await submitter_getProfitProof<ProfitProofResult>(getProfitProofParams)
+    const {
+      data: { result = [] },
+    } = proofRes
+    const {
+      smtLeaves,
+      siblings,
+      startIndex,
+      firstZeroBits,
+      bitmaps,
+      withdrawAmount,
+    } = getWithDrawParams(result)
+    const withdrawLockData = (await withdrawLockCheck()).data
+    if (withdrawLockData) {
+      toast({
+        variant: 'destructive',
+        title:
+          'Multiple withdrawals are not allowed within the same withdrawal timeframe.',
+      })
+    } else {
+      return await withdrawVerification({
+        args: [
+          smtLeaves,
+          getEncodeSbilings(siblings),
+          startIndex,
+          firstZeroBits,
+          bitmaps,
+          withdrawAmount,
+        ],
+      })
+    }
   }
 
   const beforeWithdraw = (e: any) => {
