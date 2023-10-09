@@ -6,12 +6,13 @@ import { usePromiseWithToast } from '@/hooks/promise-with-toast'
 import { predictMDCAddress } from '@/lib/utils'
 import { ConnectKitButton } from 'connectkit'
 import { Loader2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Address, Hex } from 'viem'
 import {
   useAccount,
   useContractRead,
   useContractWrite,
+  useNetwork,
   usePublicClient,
 } from 'wagmi'
 import { RuleList } from './rule-list'
@@ -27,6 +28,7 @@ import {
   IMdcsItem,
 } from './utils/getChecklist'
 import { getBindSpvs, IBindSpvResult } from './utils/getBindSpvs'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 function useMDCInfo() {
   const account = useAccount()
@@ -164,13 +166,34 @@ export function MakerMain() {
   const account = useAccount()
   const mdcInfo = useMDCInfo()
   const checkListData = useCheckListData()
+  const { chain } = useNetwork()
+  const currentChainId = useRef(chain?.id)
   const mdcDeploy = useMDCDeploy(mdcInfo.refetch, checkListData.refetch)
   const { bindSpvData, isSpvLoading } = useSpvBind()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const { data: dealerInfo } = useContractRead({
     ...contracts.orFeeManager,
     functionName: 'getDealerInfo',
     args: [account?.address],
   })
+
+  const checkChainId = async (e: any) => {
+    if (e?.target?.className?.includes('check-chainId')) {
+      await checkChainIdToMainnet()
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('click', checkChainId, false)
+    return () => window.removeEventListener('click', checkChainId, false)
+  }, [])
+
+  useEffect(() => {
+    if (chain?.id !== currentChainId.current) {
+      location.reload()
+    }
+  }, [chain?.id])
+
   if (!account.address) return <ConnectKitButton />
 
   if (!mdcInfo.code) {
@@ -188,7 +211,7 @@ export function MakerMain() {
             onClick={mdcDeploy.refetch}
             size="lg"
             disabled={mdcDeploy.loading}
-            className="w-auto"
+            className="w-auto check-chainId"
           >
             {mdcDeploy.loading && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

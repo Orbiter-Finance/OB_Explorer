@@ -256,7 +256,7 @@ export function CheckList(props: ICheckListData) {
             <SendDialog send={columnArrayUpdated} requiredEnableTime={true}>
               <Button
                 onClick={(e) => beforeUpdate(e, ownerContractAddress)}
-                className="mr-2"
+                className="mr-2 check-chainId"
                 variant="outline"
               >
                 Submit

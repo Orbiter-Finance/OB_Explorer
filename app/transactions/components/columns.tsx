@@ -32,7 +32,7 @@ const convertToDetail = (item: ListItem) => {
     SourceChain: getChainName(item.fromChainId) || '-',
     TargetChain: getChainName(item.toChainId) || '-',
     Source: item.sourceAddress,
-    Dest: item.sourceAddress,
+    Dest: item.targetAddress,
     Date: dateFormatStandard(item.fromTimestamp, 'DD-MM-YYYY ss:mm:HH'),
     CoinType: item.fromSymbol,
     SendTheNumber: clearFloatZero(item.fromAmount) || '-',

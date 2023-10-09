@@ -596,10 +596,17 @@ export function DealerHistoryProfitWithdraw(
                 send={() => onWithDraw()}
               >
                 <div>
-                  <Button className="mr-2" onClick={beforeWithdrawAll}>
+                  <Button
+                    className="mr-2 check-chainId"
+                    onClick={beforeWithdrawAll}
+                  >
                     Claim (All)
                   </Button>
-                  <Button variant="outline" onClick={beforeWithdraw}>
+                  <Button
+                    variant="outline"
+                    className="check-chainId"
+                    onClick={beforeWithdraw}
+                  >
                     Claim Withdrawn Amount
                   </Button>
                 </div>

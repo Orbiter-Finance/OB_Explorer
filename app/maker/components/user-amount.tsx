@@ -151,7 +151,11 @@ function RenderConfirmButton(props: IConfirmInterface) {
   }
   if (!currentToken || !amount) {
     return (
-      <Button variant="outline" onClick={() => showToast()}>
+      <Button
+        variant="outline"
+        className="check-chainId"
+        onClick={() => showToast()}
+      >
         Submit
       </Button>
     )
@@ -159,7 +163,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
     return (
       <SendDialog send={() => confirmFunc()}>
         <Button
-          className="mr-2"
+          className="mr-2 check-chainId"
           variant="outline"
           onClick={(e) => beforeUpdate(e, address)}
         >

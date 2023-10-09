@@ -125,7 +125,10 @@ export function Spv(props: IUserAmountSpcProps) {
           <CardTitle className="flex">
             <div className="flex-1">SPV</div>
             <SendDialog send={updateSpvsFunc} requiredEnableTime={true}>
-              <Button onClick={(e) => beforeUpdate(e, ownerContractAddress)}>
+              <Button
+                className="check-chainId"
+                onClick={(e) => beforeUpdate(e, ownerContractAddress)}
+              >
                 Submit
               </Button>
             </SendDialog>

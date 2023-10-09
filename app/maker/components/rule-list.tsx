@@ -438,7 +438,7 @@ export function RuleList() {
             <div>
               <Button
                 variant="outline"
-                className="mr-2"
+                className="mr-2 check-chainId"
                 onClick={() => refetch()}
               >
                 Refresh
@@ -456,7 +456,7 @@ export function RuleList() {
                   setNewRule(undefined)
                 }}
               >
-                <Button variant="outline" className="mr-2">
+                <Button variant="outline" className="mr-2 check-chainId">
                   Add Rules
                 </Button>
               </RuleModify>

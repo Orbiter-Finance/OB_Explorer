@@ -100,14 +100,18 @@ function RenderConfirmButton(props: IConfirmInterface) {
   }
   if (!currentToken || !amount) {
     return (
-      <Button variant="outline" onClick={() => showToast()}>
+      <Button
+        variant="outline"
+        className="check-chainId"
+        onClick={() => showToast()}
+      >
         Deposit
       </Button>
     )
   } else {
     return (
       <SendDialog send={() => confirmFunc()}>
-        <Button variant="outline" className="mr-2">
+        <Button variant="outline" className="mr-2 check-chainId">
           Deposit
         </Button>
       </SendDialog>
