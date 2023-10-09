@@ -49,7 +49,7 @@ export function DealerMain() {
   }, [])
 
   React.useEffect(() => {
-    if (chain?.id !== currentChainId.current) {
+    if (chain?.id && chain?.id !== currentChainId.current) {
       location.reload()
     }
   }, [chain?.id])
