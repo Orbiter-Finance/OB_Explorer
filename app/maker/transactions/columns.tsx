@@ -65,10 +65,10 @@ function RenderSendButton(props: ISendInterface) {
   }
 
   const beforeSend = async (e: any) => {
-    if (account.address !== row.sourceAddress) {
+    if (account.address !== row.sourceMaker) {
       e.preventDefault()
       return showToast(
-        `Please switch the address to ${row.sourceAddress} in the wallet!`,
+        `Please switch the address to ${row.sourceMaker} in the wallet!`,
       )
     }
   }
