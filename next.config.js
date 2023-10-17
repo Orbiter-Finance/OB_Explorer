@@ -3,9 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   // Enables the styled-components SWC transform
   // Fixed: Prop className did not match
-  experimental: {
-    appDir: true,
-  },
   compiler: {
     styledComponents: true,
   },

@@ -698,16 +698,18 @@ export default [
   },
   {
     api: {
-      url: 'https://blockscout.scroll.io/api',
+      url: '',
       key: '',
     },
     chainId: '534352',
     networkId: '534352',
     internalId: '19',
     name: 'Scroll',
-    features: [],
     debug: false,
     contracts: ['0xd9d74a29307cc6fc8bf424ee4217f1a587fbc8dc'],
+    router: {
+      '0x13E46b2a3f8512eD4682a8Fb8B560589fE3C2172': 'OrbiterRouterV3',
+    },
     nativeCurrency: {
       name: 'ETH',
       symbol: 'ETH',
@@ -716,13 +718,7 @@ export default [
     },
     rpc: ['https://rpc.scroll.io'],
     watch: ['rpc'],
-    router: {
-      '0x13e46b2a3f8512ed4682a8fb8b560589fe3c2172': 'OrbiterRouterV3',
-    },
-    service: {
-      rpc: 'EVMRpcScanningV6Service',
-    },
     tokens: [],
-    infoURL: 'https://scrollscan.com/',
+    infoURL: 'https://scrollscan.com',
   },
 ]
