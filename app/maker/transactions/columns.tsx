@@ -29,7 +29,8 @@ function RenderSendButton(props: ISendInterface) {
   const { checkChainIdToMainnet } = useCheckChainId()
   const isEth = row?.fromSymbol === 'ETH'
   const currentToChainId = Number(row?.toChainId)
-  const showSendButton = !row?.toHash && row?.status === 97
+  const showSendButton =
+    !row?.toHash && (row?.status === 97 || row?.status === 0)
   const { sendTransactionAsync } = useSendTransaction()
 
   const { writeAsync: transfer } = useContractWrite({
