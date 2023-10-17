@@ -105,7 +105,11 @@ export function DealerBoundByMakerList(
       <CardHeader>
         <CardTitle className="flex justify-between relative">
           Bound Maker
-          <Button variant="outline" onClick={() => refetch()}>
+          <Button
+            variant="outline"
+            className="check-chainId"
+            onClick={() => refetch()}
+          >
             Refresh
           </Button>
         </CardTitle>

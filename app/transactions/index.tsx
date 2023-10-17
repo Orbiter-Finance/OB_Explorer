@@ -4,15 +4,26 @@ import { columns } from './components/columns'
 import { DataTable } from './components/data-table'
 import { fetchData, ListItem, ITxListParams } from './fetchData'
 import { DataTablePaginationCopy } from './components/data-table-pagination-copy'
+import { ColumnDef } from '@tanstack/react-table'
+import { useAccount } from 'wagmi'
 
 const paginationPageSizeList = [10, 20, 30, 40, 50]
-export default function TransactionsPage() {
+
+interface TransactionsPagePops {
+  pageType?: string
+  otherColumns?: ColumnDef<ListItem>[]
+}
+
+export default function TransactionsPage(props: TransactionsPagePops) {
+  const { pageType = '', otherColumns = [] } = props
+  const account = useAccount()
   const [data, setData] = React.useState<ListItem[]>([])
   const [pageIndex, setPageIndex] = React.useState<number>(1)
   const [pageSize, setPageSize] = React.useState<number>(30)
   const [pageCount, setPageCount] = React.useState<number>(0)
   const [isHadNextPage, setIsHadNextPage] = React.useState<boolean>(false)
   const [loading, setLoading] = React.useState<boolean>(false)
+
   const isHadData = React.useMemo(() => {
     return data.length > 0
   }, [data])
@@ -23,6 +34,7 @@ export default function TransactionsPage() {
   ): Promise<void> => {
     try {
       needLoading && setLoading(true)
+      params.makerAddress = pageType === 'maker' ? account.address : void 0
       const res = await fetchData(params)
       needLoading && setLoading(false)
       setData(res.data.result.list)
@@ -35,7 +47,10 @@ export default function TransactionsPage() {
           ? res.data.result.list.length
           : currentPageIndex * params.pageSize + res.data.result.list.length
       setIsHadNextPage(curDataListCount > currentPageDataCount)
-    } catch (error) {
+    } catch (error: any) {
+      setData([])
+      setPageCount(0)
+      setIsHadNextPage(false)
       needLoading && setLoading(false)
     }
   }
@@ -94,10 +109,11 @@ export default function TransactionsPage() {
           setPageSize={setPageSize}
         />
         <DataTable
+          pageType={pageType}
           pagination={pagination}
           loading={loading}
           data={data}
-          columns={columns}
+          columns={[...columns, ...otherColumns]}
         />
       </div>
     </main>

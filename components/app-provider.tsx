@@ -4,10 +4,23 @@ import { ChainInfoInterface, getChainInfos } from '@/lib/thegraphs/manager'
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit'
 import { useEffect, useState } from 'react'
 import { createConfig, WagmiConfig } from 'wagmi'
-import { goerli, mainnet } from 'wagmi/chains'
+import {
+  mainnet,
+  arbitrum,
+  optimism,
+  zkSync,
+  goerli,
+  arbitrumGoerli,
+  optimismGoerli,
+  zkSyncTestnet,
+} from 'wagmi/chains'
 import { AppContext } from './app-context'
 import { useTheme } from 'next-themes'
 import { appMainnet } from '@/config/env'
+
+const mainnetChains = [mainnet, arbitrum, optimism, zkSync]
+
+const testChains = [goerli, arbitrumGoerli, optimismGoerli, zkSyncTestnet]
 
 const config = createConfig(
   getDefaultConfig({
@@ -24,7 +37,7 @@ const config = createConfig(
     appUrl: '',
     appIcon: '',
 
-    chains: [appMainnet ? mainnet : goerli],
+    chains: appMainnet ? mainnetChains : testChains,
   }),
 )
 

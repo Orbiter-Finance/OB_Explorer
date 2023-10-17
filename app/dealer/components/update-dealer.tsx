@@ -116,7 +116,7 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
           <Button
             disabled={Number(dealerInfo?.feeRatio) > 0}
             onClick={beforeUpdate}
-            className="mr-2"
+            className="mr-2 check-chainId"
             variant="outline"
           >
             Register

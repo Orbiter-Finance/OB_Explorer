@@ -33,6 +33,7 @@ interface DataTableProps<TData, TValue> {
     pageIndex: number
     pageSize: number
   }
+  pageType?: string
 }
 
 export function DataTable<TData, TValue>({
@@ -40,6 +41,7 @@ export function DataTable<TData, TValue>({
   data,
   pagination,
   loading,
+  pageType = '',
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -49,7 +51,7 @@ export function DataTable<TData, TValue>({
   )
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const table = useReactTable({
+  const table = useReactTable<any>({
     data,
     columns,
     state: {
@@ -104,6 +106,11 @@ export function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
+                    className={
+                      pageType === 'maker' && !row.original.toHash
+                        ? 'bg-pink-50'
+                        : ''
+                    }
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
