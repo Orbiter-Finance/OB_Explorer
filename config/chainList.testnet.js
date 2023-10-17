@@ -687,4 +687,31 @@ export default [
     tokens: [],
     infoURL: 'https://testnet.explorer.zora.energy',
   },
+  {
+    api: {
+      url: '',
+      key: '',
+    },
+    chainId: '534351',
+    networkId: '534351',
+    internalId: '528',
+    name: 'Scroll Sepolia',
+    features: [],
+    debug: false,
+    contracts: [],
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18,
+      address: '0x0000000000000000000000000000000000000000',
+    },
+    rpc: [
+      'https://sepolia-rpc.scroll.io',
+      'http://scroll-testnet-public.unifra.io/',
+      'https://rpc.ankr.com/scroll_sepolia_testnet',
+    ],
+    watch: ['rpc'],
+    tokens: [],
+    infoURL: 'https://sepolia-blockscout.scroll.io',
+  },
 ]

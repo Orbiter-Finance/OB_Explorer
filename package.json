@@ -43,7 +43,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.263.1",
     "merkle-patricia-tree": "^4.2.4",
-    "next": "^13.4.19",
+    "next": "13.4.19",
     "next-themes": "^0.2.1",
     "react": "18.2.0",
     "react-day-picker": "^8.8.0",
@@ -63,7 +63,7 @@
     "eslint-config-next": "13.4.12",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "postcss": "8.4.27",
+    "postcss": "^8.4.31",
     "prettier": "^3.0.3",
     "typescript": "5.1.6"
   }

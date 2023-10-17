@@ -696,4 +696,29 @@ export default [
     },
     infoURL: 'https://explorer.zora.energy',
   },
+  {
+    api: {
+      url: '',
+      key: '',
+    },
+    chainId: '534352',
+    networkId: '534352',
+    internalId: '19',
+    name: 'Scroll',
+    debug: false,
+    contracts: ['0xd9d74a29307cc6fc8bf424ee4217f1a587fbc8dc'],
+    router: {
+      '0x13E46b2a3f8512eD4682a8Fb8B560589fE3C2172': 'OrbiterRouterV3',
+    },
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18,
+      address: '0x0000000000000000000000000000000000000000',
+    },
+    rpc: ['https://rpc.scroll.io'],
+    watch: ['rpc'],
+    tokens: [],
+    infoURL: 'https://scrollscan.com',
+  },
 ]
