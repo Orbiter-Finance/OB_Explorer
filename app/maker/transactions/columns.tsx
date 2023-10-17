@@ -11,6 +11,7 @@ import { Hash } from '@wagmi/core'
 import { useAccount } from 'wagmi'
 import { getTokenInfoDecimal } from '@/lib/thegraphs/manager'
 import { useCheckChainId } from '@/hooks/check-chainId'
+import { equalBN } from '@/lib/utils'
 
 interface ISendInterface {
   row: any
@@ -65,7 +66,7 @@ function RenderSendButton(props: ISendInterface) {
   }
 
   const beforeSend = async (e: any) => {
-    if (account.address !== row.sourceMaker) {
+    if (!equalBN(account.address || 0, row.sourceMaker)) {
       e.preventDefault()
       return showToast(
         `Please switch the address to ${row.sourceMaker} in the wallet!`,
