@@ -49,7 +49,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
   const { currentToken, address, amount, currentTabs } = props
   const isEth = currentToken?.symbol === 'ETH'
   const { sendTransactionAsync } = useSendTransaction()
-  const { checkCurrentChain } = useCheckChainId()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const { writeAsync: transfer } = useContractWrite({
     address: currentToken.mainnetToken as Hash,
     abi: ERC20_ABI,
@@ -84,8 +84,8 @@ function RenderConfirmButton(props: IConfirmInterface) {
       ],
     })
   }
-  const confirmFunc = async (e: any): Promise<{ hash: Hash }> => {
-    if (checkCurrentChain()) return e.preventDefault()
+  const confirmFunc = async (): Promise<{ hash: Hash }> => {
+    await checkChainIdToMainnet()
     const depositOrWithdrawFunc =
       currentTabs === 'deposit'
         ? isEth
@@ -95,27 +95,23 @@ function RenderConfirmButton(props: IConfirmInterface) {
     return await depositOrWithdrawFunc()
   }
 
-  const showToast = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
+  const showToast = () => {
     toast({
       variant: 'destructive',
       title: 'Please select Token or input Amount.',
     })
   }
+
   if (!currentToken || !amount) {
     return (
-      <Button
-        variant="outline"
-        className="check-chainId"
-        onClick={(e) => showToast(e)}
-      >
+      <Button variant="outline" onClick={() => showToast()}>
         Deposit
       </Button>
     )
   } else {
     return (
-      <SendDialog send={(e) => confirmFunc(e)}>
-        <Button variant="outline" className="mr-2 check-chainId">
+      <SendDialog send={() => confirmFunc()}>
+        <Button variant="outline" className="mr-2">
           Deposit
         </Button>
       </SendDialog>

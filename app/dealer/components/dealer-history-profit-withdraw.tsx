@@ -109,7 +109,7 @@ export function DealerHistoryProfitWithdraw(
   const { resolvedTheme } = useTheme()
   const [loading, setLoading] = useState(false)
   const withdrawData = useRef<ListItem[]>([])
-  const { checkCurrentChain } = useCheckChainId()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const [tokenDecimals, setTokenDecimals] = useState<{
     [key: Address]: number
   }>({})
@@ -376,6 +376,7 @@ export function DealerHistoryProfitWithdraw(
       bitmaps,
       withdrawAmount,
     } = getWithDrawParams(result)
+    await checkChainIdToMainnet()
     const withdrawLockData = (await withdrawLockCheck()).data
     if (withdrawLockData) {
       toast({
@@ -398,7 +399,6 @@ export function DealerHistoryProfitWithdraw(
   }
 
   const beforeWithdraw = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
     if (durationCheck !== durationStatusEnum.withdraw) {
       e.preventDefault()
       return toast({
@@ -418,7 +418,6 @@ export function DealerHistoryProfitWithdraw(
   }
 
   const beforeWithdrawAll = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
     profitData.length > 0 &&
       profitData.forEach((item) => {
         withdrawData.current = withdrawData.current.map((v) => {
@@ -600,17 +599,10 @@ export function DealerHistoryProfitWithdraw(
                 send={() => onWithDraw()}
               >
                 <div>
-                  <Button
-                    className="mr-2 check-chainId"
-                    onClick={beforeWithdrawAll}
-                  >
+                  <Button className="mr-2" onClick={beforeWithdrawAll}>
                     Claim (All)
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="check-chainId"
-                    onClick={beforeWithdraw}
-                  >
+                  <Button variant="outline" onClick={beforeWithdraw}>
                     Claim Withdrawn Amount
                   </Button>
                 </div>

@@ -58,7 +58,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
   const client = usePublicClient()
   const isEth = currentToken?.symbol === 'ETH'
   const { sendTransactionAsync } = useSendTransaction()
-  const { checkCurrentChain } = useCheckChainId()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const allowanceArgs =
     currentTabs === 'deposit'
       ? [account.address, address]
@@ -125,6 +125,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
           ? ethDepositFunc
           : otherDepositFunc
         : withdrawFunc
+    await checkChainIdToMainnet()
     if (!isEth && BigNumber.from(allowanceData).lt(amount)) {
       const approveAddressParam =
         currentTabs === 'deposit' ? address : account.address
@@ -143,7 +144,6 @@ function RenderConfirmButton(props: IConfirmInterface) {
   }
 
   const showToast = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
     const toastTitle = address
       ? 'Please select Token or input Amount.'
       : 'Need to register as Maker.'
@@ -153,18 +153,9 @@ function RenderConfirmButton(props: IConfirmInterface) {
     })
   }
 
-  const networkCheck = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
-    beforeUpdate(e, address)
-  }
-
   if (!currentToken || !amount) {
     return (
-      <Button
-        variant="outline"
-        className="check-chainId"
-        onClick={(e) => showToast(e)}
-      >
+      <Button variant="outline" onClick={(e) => showToast(e)}>
         Submit
       </Button>
     )
@@ -172,9 +163,9 @@ function RenderConfirmButton(props: IConfirmInterface) {
     return (
       <SendDialog send={() => confirmFunc()}>
         <Button
-          className="mr-2 check-chainId"
+          className="mr-2"
           variant="outline"
-          onClick={(e) => networkCheck(e)}
+          onClick={(e) => beforeUpdate(e, address)}
         >
           Submit
         </Button>

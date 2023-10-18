@@ -36,7 +36,6 @@ import { utils } from 'ethers'
 import { dateFormatStandard, formatAddress, getChainInfoURL } from '@/lib/utils'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
-import { useCheckChainId } from '@/hooks/check-chainId'
 
 interface IDealerWithDrawRecordListInterface {}
 
@@ -74,7 +73,6 @@ export function DealerWithDrawRecord(
 ) {
   const { loading, withdrawRecordList, refetch } = useWithdrawRecordData()
   const { resolvedTheme } = useTheme()
-  const { checkCurrentChain } = useCheckChainId()
 
   const columns: ColumnDef<IWithdrawItem>[] = useMemo(() => {
     return [
@@ -162,21 +160,12 @@ export function DealerWithDrawRecord(
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const networkCheck = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
-    refetch()
-  }
-
   return (
     <Card className="flex-1 mt-4">
       <CardHeader>
         <CardTitle className="flex justify-between relative">
           Withdraw Record
-          <Button
-            variant="outline"
-            className="check-chainId"
-            onClick={(e) => networkCheck(e)}
-          >
+          <Button variant="outline" onClick={() => refetch()}>
             Refresh
           </Button>
         </CardTitle>

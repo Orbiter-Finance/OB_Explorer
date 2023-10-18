@@ -38,7 +38,7 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
     functionName: 'updateDealer',
   })
 
-  const { checkCurrentChain } = useCheckChainId()
+  const { checkChainIdToMainnet } = useCheckChainId()
 
   const handlerInputFeeRatio = (v: any): void => {
     let value = v.target.value
@@ -52,7 +52,6 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
 
   const beforeUpdate = useCallback(
     (e: any) => {
-      if (checkCurrentChain()) return e.preventDefault()
       let toastTitle = ''
       if (!percentFeeRatio) {
         toastTitle = 'FeeRatio cannot be empty.'
@@ -71,6 +70,7 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
   )
 
   const updateDealerFeeRatio = async () => {
+    await checkChainIdToMainnet()
     return await updateDealer({
       args: [
         BigNumber.from(percentFeeRatio),
@@ -120,7 +120,7 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
           <Button
             disabled={Number(dealerInfo?.feeRatio) > 0}
             onClick={beforeUpdate}
-            className="mr-2 check-chainId"
+            className="mr-2"
             variant="outline"
           >
             Register

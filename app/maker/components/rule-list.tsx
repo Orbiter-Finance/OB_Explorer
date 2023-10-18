@@ -114,7 +114,7 @@ export function RuleList() {
     ...unSubmittedRules,
   ])
   const [changedRules, setChangedRules] = useState<RuleOnewayInterface[]>([])
-  const { checkCurrentChain } = useCheckChainId()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const { latestRules, loading, refetch } = useLatestRules()
   const [expanded, setExpanded] = useState<ExpandedState>({})
   useMemo(() => {
@@ -409,6 +409,7 @@ export function RuleList() {
   })
 
   const submitModifies = async ({ enableTime }: { enableTime?: number }) => {
+    await checkChainIdToMainnet()
     const rootWithVersion = (await rulesRoot()).data
 
     const { rules: ruleTwoways, updateRules } = mergeRuleOneways(
@@ -430,15 +431,6 @@ export function RuleList() {
     return { hash }
   }
 
-  const refetchNetworkCheck = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
-    refetch()
-  }
-
-  const networkCheck = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
-  }
-
   return (
     <div className="w-full">
       <Card className="w-full">
@@ -448,8 +440,8 @@ export function RuleList() {
             <div>
               <Button
                 variant="outline"
-                className="mr-2 check-chainId"
-                onClick={(e) => refetchNetworkCheck(e)}
+                className="mr-2"
+                onClick={() => refetch()}
               >
                 Refresh
               </Button>
@@ -466,11 +458,7 @@ export function RuleList() {
                   setNewRule(undefined)
                 }}
               >
-                <Button
-                  variant="outline"
-                  onClick={(e) => networkCheck(e)}
-                  className="mr-2 check-chainId"
-                >
+                <Button variant="outline" className="mr-2">
                   Add Rules
                 </Button>
               </RuleModify>
@@ -485,9 +473,7 @@ export function RuleList() {
                     setChangedRules([])
                   }}
                 >
-                  <Button onClick={(e) => networkCheck(e)}>
-                    Submit modifies
-                  </Button>
+                  <Button>Submit modifies</Button>
                 </SendDialog>
               )}
             </div>

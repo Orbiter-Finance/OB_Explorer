@@ -35,17 +35,6 @@ export function DealerMain() {
     return dealerInfo && Number(dealerInfo.feeRatio) > 0
   }, [dealerInfo])
 
-  const checkChainId = async (e: any) => {
-    if (e?.target?.className?.includes('check-chainId')) {
-      await checkChainIdToMainnet()
-    }
-  }
-
-  React.useEffect(() => {
-    window.addEventListener('click', checkChainId, false)
-    return () => window.removeEventListener('click', checkChainId, false)
-  }, [])
-
   if (!account.address) return <ConnectKitButton />
 
   return (

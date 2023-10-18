@@ -1,6 +1,6 @@
 import { useToast } from '@/components/ui/use-toast'
 import { appMainnet } from '@/config/env'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNetwork, useSwitchNetwork } from 'wagmi'
 
 export function useCheckChainId() {
@@ -8,37 +8,38 @@ export function useCheckChainId() {
   const { chain, chains } = useNetwork()
   const { switchNetworkAsync } = useSwitchNetwork()
 
-  const shouldChooseChainId = appMainnet ? 1 : 5
+  const currentChainId = useMemo(() => {
+    return appMainnet ? 1 : 5
+  }, [])
 
   const isNeedChangeNetwork = useMemo(() => {
-    return chain?.id !== (appMainnet ? 1 : 5)
-  }, [chain?.id])
+    return chain?.id !== currentChainId
+  }, [chain?.id, currentChainId])
 
   const changeNetworkAsync = async (id: number) => {
     switchNetworkAsync && (await switchNetworkAsync(id))
   }
 
-  const checkCurrentChain = (targetChainId?: number) => {
-    const checkChainId = targetChainId ? targetChainId : shouldChooseChainId
-    return chain && chain?.id !== checkChainId
-  }
+  const checkChainIdToMainnet = useCallback(
+    async (targetChainId?: number) => {
+      const toChainId = targetChainId ? targetChainId : currentChainId
+      if (chain && chain?.id === toChainId) return
+      if (chains.findIndex((v) => v.id === toChainId) !== -1) {
+        return await changeNetworkAsync(toChainId)
+      } else {
+        return toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'please add chain .',
+        })
+      }
+    },
+    [currentChainId, chain, chains],
+  )
 
-  const checkChainIdToMainnet = async (targetChainId?: number) => {
-    const toChainId = targetChainId ? targetChainId : shouldChooseChainId
-    if (chain && chain?.id === toChainId) return
-    if (chains.findIndex((v) => v.id === toChainId) !== -1) {
-      return await changeNetworkAsync(toChainId)
-    } else {
-      return toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: 'please add chain .',
-      })
-    }
-  }
   return {
+    currentChainId,
     isNeedChangeNetwork,
-    checkCurrentChain,
     checkChainIdToMainnet,
   }
 }

@@ -84,7 +84,7 @@ export function CheckList(props: ICheckListData) {
   const [ebcInitChecked, setEbcInitChecked] = React.useState(0)
   const [chainsInitChecked, setChainsInitChecked] = React.useState(0)
   const { resolvedTheme } = useTheme()
-  const { checkCurrentChain } = useCheckChainId()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const dealerMapping =
     (mdcs.length > 0 && mdcs[0]?.mapping && mdcs[0].mapping?.dealerMapping) ||
     []
@@ -242,17 +242,19 @@ export function CheckList(props: ICheckListData) {
     }: {
       enableTime?: number
     }): Promise<{ hash: `0x${string}` }> => {
+      await checkChainIdToMainnet()
       return await writeAsync({
         args: [enableTime, dealerChecked, ebcChecked, chainsChecked],
       })
     },
-    [writeAsync, dealerChecked, ebcChecked, chainsChecked],
+    [
+      writeAsync,
+      dealerChecked,
+      ebcChecked,
+      checkChainIdToMainnet,
+      chainsChecked,
+    ],
   )
-
-  const networkCheck = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
-    beforeUpdate(e, ownerContractAddress)
-  }
 
   return (
     <div className="w-full">
@@ -262,8 +264,8 @@ export function CheckList(props: ICheckListData) {
             <div className="flex-1">Settings</div>
             <SendDialog send={columnArrayUpdated} requiredEnableTime={true}>
               <Button
-                onClick={(e) => networkCheck(e)}
-                className="mr-2 check-chainId"
+                onClick={(e) => beforeUpdate(e, ownerContractAddress)}
+                className="mr-2"
                 variant="outline"
               >
                 Submit

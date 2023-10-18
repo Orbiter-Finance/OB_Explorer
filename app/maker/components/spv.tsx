@@ -35,7 +35,7 @@ export function Spv(props: IUserAmountSpcProps) {
   const { ownerContractAddress, bindSpvData, isSpvLoading } = props
   const spvsInfoList = getSpvs()
   const { resolvedTheme } = useTheme()
-  const { checkCurrentChain } = useCheckChainId()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const [currentChooseId, setCurrentChooseId] = React.useState(
     spvsInfoList?.[0]?.id,
   )
@@ -115,14 +115,10 @@ export function Spv(props: IUserAmountSpcProps) {
         })
       }
     }
+    await checkChainIdToMainnet()
     return await updateSpvs({
       args: [enableTime, spvList, chainIdList],
     })
-  }
-
-  const networkCheck = (e: any) => {
-    if (checkCurrentChain()) return e.preventDefault()
-    beforeUpdate(e, ownerContractAddress)
   }
 
   return (
@@ -132,10 +128,7 @@ export function Spv(props: IUserAmountSpcProps) {
           <CardTitle className="flex">
             <div className="flex-1">SPV</div>
             <SendDialog send={updateSpvsFunc} requiredEnableTime={true}>
-              <Button
-                className="check-chainId"
-                onClick={(e) => networkCheck(e)}
-              >
+              <Button onClick={(e) => beforeUpdate(e, ownerContractAddress)}>
                 Submit
               </Button>
             </SendDialog>
