@@ -18,6 +18,7 @@ import { toast } from '@/components/ui/use-toast'
 import { getDecimalPlaces } from '@/lib/utils'
 import { PERCENT_RATIO_MULTIPLE } from '@/config/constants'
 import { DealerInfo } from '@/app/dealer/components/main'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 const MAX_FEE_RATIO = 100
 
@@ -37,6 +38,8 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
     functionName: 'updateDealer',
   })
 
+  const { checkCurrentChain } = useCheckChainId()
+
   const handlerInputFeeRatio = (v: any): void => {
     let value = v.target.value
     value = value.replace(/[^0-9.]/g, '')
@@ -49,6 +52,7 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
 
   const beforeUpdate = useCallback(
     (e: any) => {
+      if (checkCurrentChain()) return e.preventDefault()
       let toastTitle = ''
       if (!percentFeeRatio) {
         toastTitle = 'FeeRatio cannot be empty.'

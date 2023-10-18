@@ -34,6 +34,7 @@ import { SendDialog } from '@/components/send-dialog'
 import { DealerHistoryProfitWithdraw } from '@/app/dealer/components/dealer-history-profit-withdraw'
 import { orFeeManagerAddress } from '@/config/contracts'
 import { equalBN } from '@/lib/utils'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 interface IMakerFeeRatioAmountProps {
   ownerContractAddress: Address
@@ -48,6 +49,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
   const { currentToken, address, amount, currentTabs } = props
   const isEth = currentToken?.symbol === 'ETH'
   const { sendTransactionAsync } = useSendTransaction()
+  const { checkCurrentChain } = useCheckChainId()
   const { writeAsync: transfer } = useContractWrite({
     address: currentToken.mainnetToken as Hash,
     abi: ERC20_ABI,
@@ -82,7 +84,8 @@ function RenderConfirmButton(props: IConfirmInterface) {
       ],
     })
   }
-  const confirmFunc = async (): Promise<{ hash: Hash }> => {
+  const confirmFunc = async (e: any): Promise<{ hash: Hash }> => {
+    if (checkCurrentChain()) return e.preventDefault()
     const depositOrWithdrawFunc =
       currentTabs === 'deposit'
         ? isEth
@@ -92,7 +95,8 @@ function RenderConfirmButton(props: IConfirmInterface) {
     return await depositOrWithdrawFunc()
   }
 
-  const showToast = () => {
+  const showToast = (e: any) => {
+    if (checkCurrentChain()) return e.preventDefault()
     toast({
       variant: 'destructive',
       title: 'Please select Token or input Amount.',
@@ -103,14 +107,14 @@ function RenderConfirmButton(props: IConfirmInterface) {
       <Button
         variant="outline"
         className="check-chainId"
-        onClick={() => showToast()}
+        onClick={(e) => showToast(e)}
       >
         Deposit
       </Button>
     )
   } else {
     return (
-      <SendDialog send={() => confirmFunc()}>
+      <SendDialog send={(e) => confirmFunc(e)}>
         <Button variant="outline" className="mr-2 check-chainId">
           Deposit
         </Button>

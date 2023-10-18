@@ -12,7 +12,6 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
-  useNetwork,
   usePublicClient,
 } from 'wagmi'
 import { RuleList } from './rule-list'
@@ -28,6 +27,7 @@ import {
   IMdcsItem,
 } from './utils/getChecklist'
 import { getBindSpvs, IBindSpvResult } from './utils/getBindSpvs'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 function useMDCInfo() {
   const account = useAccount()
@@ -167,11 +167,23 @@ export function MakerMain() {
   const checkListData = useCheckListData()
   const mdcDeploy = useMDCDeploy(mdcInfo.refetch, checkListData.refetch)
   const { bindSpvData, isSpvLoading } = useSpvBind()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const { data: dealerInfo } = useContractRead({
     ...contracts.orFeeManager,
     functionName: 'getDealerInfo',
     args: [account?.address],
   })
+
+  const checkChainId = async (e: any) => {
+    if (e?.target?.className?.includes('check-chainId')) {
+      await checkChainIdToMainnet()
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('click', checkChainId, false)
+    return () => window.removeEventListener('click', checkChainId, false)
+  }, [])
 
   if (!account.address) return <ConnectKitButton />
 

@@ -27,10 +27,10 @@ import {
   IBoundMakers,
 } from './utils/getDealerBoundMakerList'
 import { usePromiseWithToast } from '@/hooks/promise-with-toast'
-import { formatAddress, getChainInfoURL } from '@/lib/utils'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { renderJumpItem } from '@/lib/renderComponents'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 interface IDealerBoundByMakerListInterface {}
 
@@ -65,6 +65,8 @@ export function DealerBoundByMakerList(
   const { loading, boundMakerList, refetch } = useBoundMakerData()
   const { resolvedTheme } = useTheme()
   const chainId = useChainId()
+  const { checkCurrentChain } = useCheckChainId()
+
   const columns: ColumnDef<IBoundMakers>[] = useMemo(() => {
     return [
       {
@@ -100,6 +102,11 @@ export function DealerBoundByMakerList(
     getCoreRowModel: getCoreRowModel(),
   })
 
+  const networkCheck = (e: any) => {
+    if (checkCurrentChain()) return e.preventDefault()
+    refetch()
+  }
+
   return (
     <Card className="flex-1 mr-4 mt-4 max-w-[455px]">
       <CardHeader>
@@ -108,7 +115,7 @@ export function DealerBoundByMakerList(
           <Button
             variant="outline"
             className="check-chainId"
-            onClick={() => refetch()}
+            onClick={(e) => networkCheck(e)}
           >
             Refresh
           </Button>

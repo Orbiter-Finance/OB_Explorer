@@ -35,6 +35,7 @@ import {
   IMdcsItem,
 } from './utils/getChecklist'
 import { Loading } from '@/components/loding'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 interface ICheckListData {
   checkListData: {
@@ -83,6 +84,7 @@ export function CheckList(props: ICheckListData) {
   const [ebcInitChecked, setEbcInitChecked] = React.useState(0)
   const [chainsInitChecked, setChainsInitChecked] = React.useState(0)
   const { resolvedTheme } = useTheme()
+  const { checkCurrentChain } = useCheckChainId()
   const dealerMapping =
     (mdcs.length > 0 && mdcs[0]?.mapping && mdcs[0].mapping?.dealerMapping) ||
     []
@@ -247,6 +249,11 @@ export function CheckList(props: ICheckListData) {
     [writeAsync, dealerChecked, ebcChecked, chainsChecked],
   )
 
+  const networkCheck = (e: any) => {
+    if (checkCurrentChain()) return e.preventDefault()
+    beforeUpdate(e, ownerContractAddress)
+  }
+
   return (
     <div className="w-full">
       <Card className="w-full">
@@ -255,7 +262,7 @@ export function CheckList(props: ICheckListData) {
             <div className="flex-1">Settings</div>
             <SendDialog send={columnArrayUpdated} requiredEnableTime={true}>
               <Button
-                onClick={(e) => beforeUpdate(e, ownerContractAddress)}
+                onClick={(e) => networkCheck(e)}
                 className="mr-2 check-chainId"
                 variant="outline"
               >

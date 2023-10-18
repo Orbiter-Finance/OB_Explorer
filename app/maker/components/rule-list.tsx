@@ -57,6 +57,7 @@ import { Abi, Address } from 'viem'
 import { Loading } from '@/components/loding'
 import { renderTooltipProvider } from '@/lib/renderComponents'
 import { useTheme } from 'next-themes'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 function rulesFindIndex(
   rules: RuleOnewayInterface[],
@@ -113,7 +114,7 @@ export function RuleList() {
     ...unSubmittedRules,
   ])
   const [changedRules, setChangedRules] = useState<RuleOnewayInterface[]>([])
-
+  const { checkCurrentChain } = useCheckChainId()
   const { latestRules, loading, refetch } = useLatestRules()
   const [expanded, setExpanded] = useState<ExpandedState>({})
   useMemo(() => {
@@ -429,6 +430,15 @@ export function RuleList() {
     return { hash }
   }
 
+  const refetchNetworkCheck = (e: any) => {
+    if (checkCurrentChain()) return e.preventDefault()
+    refetch()
+  }
+
+  const networkCheck = (e: any) => {
+    if (checkCurrentChain()) return e.preventDefault()
+  }
+
   return (
     <div className="w-full">
       <Card className="w-full">
@@ -439,7 +449,7 @@ export function RuleList() {
               <Button
                 variant="outline"
                 className="mr-2 check-chainId"
-                onClick={() => refetch()}
+                onClick={(e) => refetchNetworkCheck(e)}
               >
                 Refresh
               </Button>
@@ -456,7 +466,11 @@ export function RuleList() {
                   setNewRule(undefined)
                 }}
               >
-                <Button variant="outline" className="mr-2 check-chainId">
+                <Button
+                  variant="outline"
+                  onClick={(e) => networkCheck(e)}
+                  className="mr-2 check-chainId"
+                >
                   Add Rules
                 </Button>
               </RuleModify>
@@ -471,7 +485,9 @@ export function RuleList() {
                     setChangedRules([])
                   }}
                 >
-                  <Button>Submit modifies</Button>
+                  <Button onClick={(e) => networkCheck(e)}>
+                    Submit modifies
+                  </Button>
                 </SendDialog>
               )}
             </div>
