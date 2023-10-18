@@ -191,7 +191,7 @@ export function MakerMain() {
             onClick={mdcDeploy.refetch}
             size="lg"
             disabled={mdcDeploy.loading}
-            className="w-auto check-chainId"
+            className="w-auto"
           >
             {mdcDeploy.loading && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
