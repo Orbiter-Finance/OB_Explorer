@@ -11,7 +11,6 @@ import { contracts } from '@/config/contracts'
 import { Abi, Hash } from 'viem'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
-import { useCheckChainId } from '@/hooks/check-chainId'
 
 export interface DealerInfo {
   feeRatio: BigNumberish
@@ -20,9 +19,6 @@ export interface DealerInfo {
 
 export function DealerMain() {
   const account = useAccount()
-  const { chain } = useNetwork()
-  const currentChainId = React.useRef(chain?.id)
-  const { checkChainIdToMainnet } = useCheckChainId()
   const { data: dealerInfo } = useContractRead<
     Abi,
     'getDealerInfo',
@@ -36,23 +32,6 @@ export function DealerMain() {
   const isHadDealerInfo = useMemo(() => {
     return dealerInfo && Number(dealerInfo.feeRatio) > 0
   }, [dealerInfo])
-
-  const checkChainId = async (e: any) => {
-    if (e?.target?.className?.includes('check-chainId')) {
-      await checkChainIdToMainnet()
-    }
-  }
-
-  React.useEffect(() => {
-    window.addEventListener('click', checkChainId, false)
-    return () => window.removeEventListener('click', checkChainId, false)
-  }, [])
-
-  React.useEffect(() => {
-    if (chain?.id && chain?.id !== currentChainId.current) {
-      location.reload()
-    }
-  }, [chain?.id])
 
   if (!account.address) return <ConnectKitButton />
 
