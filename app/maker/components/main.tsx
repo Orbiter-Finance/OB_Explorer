@@ -31,7 +31,10 @@ import { useCheckChainId } from '@/hooks/check-chainId'
 
 function useMDCInfo() {
   const account = useAccount()
-  const client = usePublicClient()
+  const { currentChainId } = useCheckChainId()
+  const client = usePublicClient({
+    chainId: currentChainId,
+  })
   const [loading, setLoading] = useState(false)
   const [code, setCode] = useState(undefined as Hex | undefined)
 
@@ -62,11 +65,15 @@ function useMDCDeploy(
   mdcInfoRefetch?: () => Promise<any>,
   checkListRefetch?: () => Promise<any>,
 ) {
+  const { checkChainIdToMainnet } = useCheckChainId()
   const contractWrite = useContractWrite({
     ...contracts.orMDCFactory,
     functionName: 'createMDC',
   })
-  const publicClient = usePublicClient()
+  const { currentChainId } = useCheckChainId()
+  const publicClient = usePublicClient({
+    chainId: currentChainId,
+  })
 
   const [loading, setLoading] = useState(false)
   const [hash, setHash] = useState('')
@@ -75,7 +82,7 @@ function useMDCDeploy(
     async () => {
       setLoading(true)
       setHash('')
-
+      await checkChainIdToMainnet()
       const { hash } = await contractWrite.writeAsync()
       setHash(hash)
 
@@ -167,7 +174,6 @@ export function MakerMain() {
   const checkListData = useCheckListData()
   const mdcDeploy = useMDCDeploy(mdcInfo.refetch, checkListData.refetch)
   const { bindSpvData, isSpvLoading } = useSpvBind()
-  const { isNeedChangeNetwork } = useCheckChainId()
   const { data: dealerInfo } = useContractRead({
     ...contracts.orFeeManager,
     functionName: 'getDealerInfo',
