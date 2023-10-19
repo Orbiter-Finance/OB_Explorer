@@ -165,11 +165,7 @@ export function DealerWithDrawRecord(
       <CardHeader>
         <CardTitle className="flex justify-between relative">
           Withdraw Record
-          <Button
-            variant="outline"
-            className="check-chainId"
-            onClick={() => refetch()}
-          >
+          <Button variant="outline" onClick={() => refetch()}>
             Refresh
           </Button>
         </CardTitle>

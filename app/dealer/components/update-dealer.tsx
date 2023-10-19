@@ -18,6 +18,7 @@ import { toast } from '@/components/ui/use-toast'
 import { getDecimalPlaces } from '@/lib/utils'
 import { PERCENT_RATIO_MULTIPLE } from '@/config/constants'
 import { DealerInfo } from '@/app/dealer/components/main'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 const MAX_FEE_RATIO = 100
 
@@ -36,6 +37,8 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
     ...contracts.orFeeManager,
     functionName: 'updateDealer',
   })
+
+  const { checkChainIdToMainnet } = useCheckChainId()
 
   const handlerInputFeeRatio = (v: any): void => {
     let value = v.target.value
@@ -67,6 +70,7 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
   )
 
   const updateDealerFeeRatio = async () => {
+    await checkChainIdToMainnet()
     return await updateDealer({
       args: [
         BigNumber.from(percentFeeRatio),
@@ -116,7 +120,7 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
           <Button
             disabled={Number(dealerInfo?.feeRatio) > 0}
             onClick={beforeUpdate}
-            className="mr-2 check-chainId"
+            className="mr-2"
             variant="outline"
           >
             Register

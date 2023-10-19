@@ -55,6 +55,7 @@ import { Loading } from '@/components/loding'
 import { ChangeEvent } from 'react'
 import { renderTooltipProvider } from '@/lib/renderComponents'
 import { defaultAbiCoder, keccak256 } from 'ethers/lib/utils'
+import { useCheckChainId } from '@/hooks/check-chainId'
 interface IDealerHistoryProfitWithdrawInterface {
   withdrawUser: 'Maker' | 'Dealer'
 }
@@ -108,6 +109,7 @@ export function DealerHistoryProfitWithdraw(
   const { resolvedTheme } = useTheme()
   const [loading, setLoading] = useState(false)
   const withdrawData = useRef<ListItem[]>([])
+  const { checkChainIdToMainnet } = useCheckChainId()
   const [tokenDecimals, setTokenDecimals] = useState<{
     [key: Address]: number
   }>({})
@@ -374,6 +376,7 @@ export function DealerHistoryProfitWithdraw(
       bitmaps,
       withdrawAmount,
     } = getWithDrawParams(result)
+    await checkChainIdToMainnet()
     const withdrawLockData = (await withdrawLockCheck()).data
     if (withdrawLockData) {
       toast({
@@ -596,17 +599,10 @@ export function DealerHistoryProfitWithdraw(
                 send={() => onWithDraw()}
               >
                 <div>
-                  <Button
-                    className="mr-2 check-chainId"
-                    onClick={beforeWithdrawAll}
-                  >
+                  <Button className="mr-2" onClick={beforeWithdrawAll}>
                     Claim (All)
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="check-chainId"
-                    onClick={beforeWithdraw}
-                  >
+                  <Button variant="outline" onClick={beforeWithdraw}>
                     Claim Withdrawn Amount
                   </Button>
                 </div>

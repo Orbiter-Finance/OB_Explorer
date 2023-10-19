@@ -21,6 +21,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { BindSpv, BindSPVs } from './utils/getBindSpvs'
 import { beforeUpdate } from '@/lib/utils'
 import { Loading } from '@/components/loding'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 interface IUserAmountSpcProps {
   bindSpvData?: {
@@ -34,6 +35,7 @@ export function Spv(props: IUserAmountSpcProps) {
   const { ownerContractAddress, bindSpvData, isSpvLoading } = props
   const spvsInfoList = getSpvs()
   const { resolvedTheme } = useTheme()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const [currentChooseId, setCurrentChooseId] = React.useState(
     spvsInfoList?.[0]?.id,
   )
@@ -113,6 +115,7 @@ export function Spv(props: IUserAmountSpcProps) {
         })
       }
     }
+    await checkChainIdToMainnet()
     return await updateSpvs({
       args: [enableTime, spvList, chainIdList],
     })
@@ -125,10 +128,7 @@ export function Spv(props: IUserAmountSpcProps) {
           <CardTitle className="flex">
             <div className="flex-1">SPV</div>
             <SendDialog send={updateSpvsFunc} requiredEnableTime={true}>
-              <Button
-                className="check-chainId"
-                onClick={(e) => beforeUpdate(e, ownerContractAddress)}
-              >
+              <Button onClick={(e) => beforeUpdate(e, ownerContractAddress)}>
                 Submit
               </Button>
             </SendDialog>

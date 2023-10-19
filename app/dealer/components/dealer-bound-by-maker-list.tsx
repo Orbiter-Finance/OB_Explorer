@@ -27,7 +27,6 @@ import {
   IBoundMakers,
 } from './utils/getDealerBoundMakerList'
 import { usePromiseWithToast } from '@/hooks/promise-with-toast'
-import { formatAddress, getChainInfoURL } from '@/lib/utils'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { renderJumpItem } from '@/lib/renderComponents'
@@ -65,6 +64,7 @@ export function DealerBoundByMakerList(
   const { loading, boundMakerList, refetch } = useBoundMakerData()
   const { resolvedTheme } = useTheme()
   const chainId = useChainId()
+
   const columns: ColumnDef<IBoundMakers>[] = useMemo(() => {
     return [
       {
@@ -105,11 +105,7 @@ export function DealerBoundByMakerList(
       <CardHeader>
         <CardTitle className="flex justify-between relative">
           Bound Maker
-          <Button
-            variant="outline"
-            className="check-chainId"
-            onClick={() => refetch()}
-          >
+          <Button variant="outline" onClick={() => refetch()}>
             Refresh
           </Button>
         </CardTitle>

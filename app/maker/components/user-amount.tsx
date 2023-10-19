@@ -41,6 +41,7 @@ import { toast } from '@/components/ui/use-toast'
 import { Hash } from 'viem'
 import { SendDialog } from '@/components/send-dialog'
 import { beforeUpdate } from '@/lib/utils'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 interface IUserAmountSpcProps {
   ownerContractAddress: Address
@@ -57,6 +58,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
   const client = usePublicClient()
   const isEth = currentToken?.symbol === 'ETH'
   const { sendTransactionAsync } = useSendTransaction()
+  const { checkChainIdToMainnet } = useCheckChainId()
   const allowanceArgs =
     currentTabs === 'deposit'
       ? [account.address, address]
@@ -123,6 +125,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
           ? ethDepositFunc
           : otherDepositFunc
         : withdrawFunc
+    await checkChainIdToMainnet()
     if (!isEth && BigNumber.from(allowanceData).lt(amount)) {
       const approveAddressParam =
         currentTabs === 'deposit' ? address : account.address
@@ -140,7 +143,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
     return depositRes
   }
 
-  const showToast = () => {
+  const showToast = (e: any) => {
     const toastTitle = address
       ? 'Please select Token or input Amount.'
       : 'Need to register as Maker.'
@@ -149,13 +152,10 @@ function RenderConfirmButton(props: IConfirmInterface) {
       title: toastTitle,
     })
   }
+
   if (!currentToken || !amount) {
     return (
-      <Button
-        variant="outline"
-        className="check-chainId"
-        onClick={() => showToast()}
-      >
+      <Button variant="outline" onClick={(e) => showToast(e)}>
         Submit
       </Button>
     )
@@ -163,7 +163,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
     return (
       <SendDialog send={() => confirmFunc()}>
         <Button
-          className="mr-2 check-chainId"
+          className="mr-2"
           variant="outline"
           onClick={(e) => beforeUpdate(e, address)}
         >

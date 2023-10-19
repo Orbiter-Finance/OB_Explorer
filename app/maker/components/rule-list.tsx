@@ -57,6 +57,7 @@ import { Abi, Address } from 'viem'
 import { Loading } from '@/components/loding'
 import { renderTooltipProvider } from '@/lib/renderComponents'
 import { useTheme } from 'next-themes'
+import { useCheckChainId } from '@/hooks/check-chainId'
 
 function rulesFindIndex(
   rules: RuleOnewayInterface[],
@@ -113,7 +114,7 @@ export function RuleList() {
     ...unSubmittedRules,
   ])
   const [changedRules, setChangedRules] = useState<RuleOnewayInterface[]>([])
-
+  const { checkChainIdToMainnet } = useCheckChainId()
   const { latestRules, loading, refetch } = useLatestRules()
   const [expanded, setExpanded] = useState<ExpandedState>({})
   useMemo(() => {
@@ -408,6 +409,7 @@ export function RuleList() {
   })
 
   const submitModifies = async ({ enableTime }: { enableTime?: number }) => {
+    await checkChainIdToMainnet()
     const rootWithVersion = (await rulesRoot()).data
 
     const { rules: ruleTwoways, updateRules } = mergeRuleOneways(
@@ -438,7 +440,7 @@ export function RuleList() {
             <div>
               <Button
                 variant="outline"
-                className="mr-2 check-chainId"
+                className="mr-2"
                 onClick={() => refetch()}
               >
                 Refresh
@@ -456,7 +458,7 @@ export function RuleList() {
                   setNewRule(undefined)
                 }}
               >
-                <Button variant="outline" className="mr-2 check-chainId">
+                <Button variant="outline" className="mr-2">
                   Add Rules
                 </Button>
               </RuleModify>

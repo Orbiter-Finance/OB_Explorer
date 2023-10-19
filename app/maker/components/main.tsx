@@ -12,7 +12,6 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
-  useNetwork,
   usePublicClient,
 } from 'wagmi'
 import { RuleList } from './rule-list'
@@ -32,7 +31,10 @@ import { useCheckChainId } from '@/hooks/check-chainId'
 
 function useMDCInfo() {
   const account = useAccount()
-  const client = usePublicClient()
+  const { currentChainId } = useCheckChainId()
+  const client = usePublicClient({
+    chainId: currentChainId,
+  })
   const [loading, setLoading] = useState(false)
   const [code, setCode] = useState(undefined as Hex | undefined)
 
@@ -63,11 +65,15 @@ function useMDCDeploy(
   mdcInfoRefetch?: () => Promise<any>,
   checkListRefetch?: () => Promise<any>,
 ) {
+  const { checkChainIdToMainnet } = useCheckChainId()
   const contractWrite = useContractWrite({
     ...contracts.orMDCFactory,
     functionName: 'createMDC',
   })
-  const publicClient = usePublicClient()
+  const { currentChainId } = useCheckChainId()
+  const publicClient = usePublicClient({
+    chainId: currentChainId,
+  })
 
   const [loading, setLoading] = useState(false)
   const [hash, setHash] = useState('')
@@ -76,7 +82,7 @@ function useMDCDeploy(
     async () => {
       setLoading(true)
       setHash('')
-
+      await checkChainIdToMainnet()
       const { hash } = await contractWrite.writeAsync()
       setHash(hash)
 
@@ -166,33 +172,13 @@ export function MakerMain() {
   const account = useAccount()
   const mdcInfo = useMDCInfo()
   const checkListData = useCheckListData()
-  const { chain } = useNetwork()
-  const currentChainId = useRef(chain?.id)
   const mdcDeploy = useMDCDeploy(mdcInfo.refetch, checkListData.refetch)
   const { bindSpvData, isSpvLoading } = useSpvBind()
-  const { checkChainIdToMainnet } = useCheckChainId()
   const { data: dealerInfo } = useContractRead({
     ...contracts.orFeeManager,
     functionName: 'getDealerInfo',
     args: [account?.address],
   })
-
-  const checkChainId = async (e: any) => {
-    if (e?.target?.className?.includes('check-chainId')) {
-      await checkChainIdToMainnet()
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener('click', checkChainId, false)
-    return () => window.removeEventListener('click', checkChainId, false)
-  }, [])
-
-  useEffect(() => {
-    if (chain?.id && chain?.id !== currentChainId.current) {
-      location.reload()
-    }
-  }, [chain?.id])
 
   if (!account.address) return <ConnectKitButton />
 
@@ -211,7 +197,7 @@ export function MakerMain() {
             onClick={mdcDeploy.refetch}
             size="lg"
             disabled={mdcDeploy.loading}
-            className="w-auto check-chainId"
+            className="w-auto"
           >
             {mdcDeploy.loading && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
