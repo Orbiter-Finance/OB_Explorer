@@ -53,10 +53,10 @@ function SelectTimePopover(props: {
           {props.items.map((item, index) => (
             <div
               className={cn(
+                'p-3 rounded-md text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground',
                 props.value &&
                   item == fillPrefixZero(props.value) &&
-                  'bg-slate-100',
-                'p-3 rounded-md text-current text-sm cursor-pointer hover:bg-slate-200',
+                  'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground',
               )}
               key={index}
               onClick={() => onClick(item)}
