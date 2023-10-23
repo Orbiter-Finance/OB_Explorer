@@ -62,6 +62,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.196",
     "@types/node": "20.4.5",
+    "@types/react-copy-to-clipboard": "^5.0.6",
     "autoprefixer": "10.4.14",
     "eslint": "^8.46.0",
     "eslint-config-next": "13.4.12",

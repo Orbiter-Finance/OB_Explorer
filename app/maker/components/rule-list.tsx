@@ -14,7 +14,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
+import { Loading } from '@/components/loding'
 import { SendDialog } from '@/components/send-dialog'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -33,6 +35,9 @@ import {
 } from '@/components/ui/table'
 import { getChainName } from '@/config/chain-list'
 import { contracts } from '@/config/contracts'
+import { useCheckChainId } from '@/hooks/check-chainId'
+import { usePromiseWithToast } from '@/hooks/promise-with-toast'
+import { renderTooltipProvider } from '@/lib/renderComponents'
 import {
   RuleInterface,
   RuleOnewayInterface,
@@ -40,25 +45,17 @@ import {
   convertToOneways,
   mergeRuleOneways,
 } from '@/lib/rule'
-import {
-  getTokenInfoMainnetToken,
-  getTokenInfoSymbol,
-} from '@/lib/thegraphs/manager'
+import { getLatestRules } from '@/lib/thegraphs/maker-deposit'
+import { getTokenInfoSymbol } from '@/lib/thegraphs/manager'
 import { cn, dateFormatStandard, equalBN, predictMDCAddress } from '@/lib/utils'
 import { BigNumberish, utils } from 'ethers'
 import lodash from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
-import { useAccount, useContractRead, useContractWrite } from 'wagmi'
-import { RuleModify } from './rule-modify'
-import { usePromiseWithToast } from '@/hooks/promise-with-toast'
-import { getLatestRules } from '@/lib/thegraphs/maker-deposit'
-import { Badge } from '@/components/ui/badge'
-import { Abi, Address } from 'viem'
-import { Loading } from '@/components/loding'
-import { renderTooltipProvider } from '@/lib/renderComponents'
 import { useTheme } from 'next-themes'
-import { useCheckChainId } from '@/hooks/check-chainId'
+import { useEffect, useMemo, useState } from 'react'
+import { Abi, Address } from 'viem'
+import { useAccount, useContractRead, useContractWrite } from 'wagmi'
 import { RuleListImportExport } from './rule-list-import-export'
+import { RuleModify } from './rule-modify'
 
 function rulesFindIndex(
   rules: RuleOnewayInterface[],
@@ -124,10 +121,6 @@ export function RuleList() {
     setRules([..._rules])
   }, [latestRules])
 
-  useMemo(() => {
-    console.log('rules:', JSON.stringify(rules))
-  }, [rules])
-
   const updateChangedRules = (rule: RuleOnewayInterface, isRemove = false) => {
     let _changedRules = changedRules
     const index = rulesFindIndex(_changedRules, rule)
@@ -140,6 +133,11 @@ export function RuleList() {
     }
 
     setChangedRules(_changedRules)
+  }
+  const onImport = async (_rules: RuleOnewayInterface[]) => {
+    setRules([])
+    setUNSubmittedRules(_rules)
+    setChangedRules(_rules)
   }
 
   const cellStyle = (row: any) => {
@@ -443,7 +441,7 @@ export function RuleList() {
           <CardTitle className="flex">
             <div className="flex-1">Rules</div>
             <div className="flex items-center">
-              <RuleListImportExport>
+              <RuleListImportExport rules={rules} onImport={onImport}>
                 <Button variant="outline" className="mr-4">
                   Import and Export
                 </Button>

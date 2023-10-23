@@ -8,41 +8,63 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useToast } from '@/components/ui/use-toast'
+import { RuleOnewayInterface } from '@/lib/rule'
+import { sleep } from '@/lib/utils'
 import { json } from '@codemirror/lang-json'
-import { githubDarkInit } from '@uiw/codemirror-theme-github'
+import { CheckIcon } from '@radix-ui/react-icons'
+import { githubDarkInit, githubLightInit } from '@uiw/codemirror-theme-github'
 import ReactCodeMirror from '@uiw/react-codemirror'
-import { useEffect, useState } from 'react'
-import { Hash } from 'viem'
+import { useTheme } from 'next-themes'
+import { useMemo, useState } from 'react'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+
+const codeThemOptions = {
+  settings: {
+    fontFamily:
+      'Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace',
+  },
+}
 
 export function RuleListImportExport(props: {
   children: React.ReactNode
-  send?: (data: { enableTime?: number }) => Promise<{ hash: Hash }>
-  requiredEnableTime?: boolean
-  onFinally?: (data: {
-    hash?: Hash
-    status?: 'loading' | 'success' | 'error'
-    open?: boolean
-  }) => void
+  rules?: RuleOnewayInterface[]
+  onImport?: (rules: RuleOnewayInterface[]) => Promise<void> | void
 }) {
+  const { resolvedTheme } = useTheme()
+  const { toast } = useToast()
+
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [isCoped, setIsCoped] = useState(false)
+  const [code, setCode] = useState('')
 
-  const onFinally: typeof props.onFinally = (data) => {
-    props.onFinally && props.onFinally(data)
+  useMemo(() => {
+    if (!(props.rules instanceof Array) || props.rules.length === 0) setCode('')
+    else setCode(JSON.stringify(props.rules, undefined, 2))
+  }, [props.rules])
+
+  const onCopy = async () => {
+    setIsCoped(true)
+
+    await sleep(2000)
+
+    setIsCoped(false)
   }
+  const onImport = async () => {
+    try {
+      const rules = JSON.parse(code)
 
-  useEffect(() => {}, [dialogOpen])
+      if (props.onImport) await props.onImport(rules)
 
-  const [code, setCode] = useState(
-    JSON.stringify(
-      JSON.parse(
-        '[{"sourceChainId":10,"destChainId":324,"sourceToken":"0x0000000000000000000000000000000000000000000000000000000000000000","destToken":"0x0000000000000000000000000000000000000000000000000000000000000000","status":1,"subRows":[],"minPrice":0.05,"maxPrice":2,"withholdingFee":0.0016,"tradeFee":0,"responseTime":86400,"compensationRatio":80},{"sourceChainId":1,"destChainId":10,"sourceToken":"0x0000000000000000000000000000000000000000000000000000000000000000","destToken":"0x0000000000000000000000000000000000000000000000000000000000000000","status":1,"subRows":[],"minPrice":0.05,"maxPrice":2,"withholdingFee":0.0016,"tradeFee":0,"responseTime":86400,"compensationRatio":80}]',
-      ),
-      undefined,
-      2,
-    ),
-  )
-
-  console.warn('code:', JSON.parse(code))
+      setDialogOpen(false)
+    } catch (err: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Import failed.',
+        description: err?.message || '',
+      })
+    }
+  }
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -57,21 +79,23 @@ export function RuleListImportExport(props: {
           value={code}
           onChange={(c) => setCode(c)}
           height="420px"
-          theme={githubDarkInit({
-            settings: {
-              fontFamily:
-                'Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace',
-            },
-          })}
+          theme={
+            resolvedTheme === 'dark'
+              ? githubDarkInit(codeThemOptions)
+              : githubLightInit(codeThemOptions)
+          }
           extensions={[json()]}
         ></ReactCodeMirror>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => 0}>
-            Copy to clipboard
-          </Button>
+          <CopyToClipboard text={code} onCopy={onCopy}>
+            <Button variant="outline" disabled={isCoped}>
+              {isCoped ? 'Copy succed' : 'Export (Copy to clipboard)'}
+              {isCoped && <CheckIcon className="ml-2 w-5 h-5" />}
+            </Button>
+          </CopyToClipboard>
 
-          <Button onClick={() => 0}>Import</Button>
+          <Button onClick={onImport}>Import</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
