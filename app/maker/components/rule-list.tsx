@@ -58,6 +58,7 @@ import { Loading } from '@/components/loding'
 import { renderTooltipProvider } from '@/lib/renderComponents'
 import { useTheme } from 'next-themes'
 import { useCheckChainId } from '@/hooks/check-chainId'
+import { RuleListImportExport } from './rule-list-import-export'
 
 function rulesFindIndex(
   rules: RuleOnewayInterface[],
@@ -122,6 +123,10 @@ export function RuleList() {
     setUNSubmittedRules(_rules)
     setRules([..._rules])
   }, [latestRules])
+
+  useMemo(() => {
+    console.log('rules:', JSON.stringify(rules))
+  }, [rules])
 
   const updateChangedRules = (rule: RuleOnewayInterface, isRemove = false) => {
     let _changedRules = changedRules
@@ -437,7 +442,13 @@ export function RuleList() {
         <CardHeader>
           <CardTitle className="flex">
             <div className="flex-1">Rules</div>
-            <div>
+            <div className="flex items-center">
+              <RuleListImportExport>
+                <Button variant="outline" className="mr-4">
+                  Import and Export
+                </Button>
+              </RuleListImportExport>
+              <div className="mr-4 inline-block h-[26px] border"></div>
               <Button
                 variant="outline"
                 className="mr-2"
