@@ -11,7 +11,7 @@ import dayjs from 'dayjs'
 import { useState } from 'react'
 import { Select, SelectTrigger, SelectValue } from './ui/select'
 
-function fillPrefixZero (num: number | string, maxLength = 2) {
+function fillPrefixZero(num: number | string, maxLength = 2) {
   num = String(num)
 
   const diff = maxLength - num.length
@@ -32,7 +32,7 @@ const secondSelectItems = Array.from({ length: 60 }).map((_, i: number) =>
   fillPrefixZero(i),
 )
 
-function SelectTimePopover (props: {
+function SelectTimePopover(props: {
   children: React.ReactNode
   items: string[]
   value?: string
@@ -48,15 +48,15 @@ function SelectTimePopover (props: {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
-      <PopoverContent className='w-auto p-1'>
-        <div className='grid grid-cols-6'>
+      <PopoverContent className="w-auto p-1">
+        <div className="grid grid-cols-6">
           {props.items.map((item, index) => (
             <div
               className={cn(
+                'p-3 rounded-md text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground',
                 props.value &&
                   item == fillPrefixZero(props.value) &&
-                  'bg-slate-100',
-                'p-3 rounded-md text-current text-sm cursor-pointer hover:bg-slate-200',
+                  'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground',
               )}
               key={index}
               onClick={() => onClick(item)}
@@ -76,7 +76,7 @@ interface TimeColumnsValue {
   second: string
 }
 
-function TimeColumns (props: {
+function TimeColumns(props: {
   value: TimeColumnsValue
   onChange?: (value: TimeColumnsValue) => void
 }) {
@@ -85,52 +85,52 @@ function TimeColumns (props: {
   }
 
   return (
-    <div className='m-4 mt-0 flex items-center'>
-      <div className='flex-1'>
-        <Select defaultValue='00'>
+    <div className="m-4 mt-0 flex items-center">
+      <div className="flex-1">
+        <Select defaultValue="00">
           <SelectTimePopover
             items={hourSelectItems}
             value={props.value.hour}
-            onChange={v => {
+            onChange={(v) => {
               onChange({ ...props.value, hour: v })
             }}
           >
-            <SelectTrigger className='line-clamp-1 truncate'>
-              <SelectValue placeholder='Hour'>{props.value.hour}</SelectValue>
+            <SelectTrigger className="line-clamp-1 truncate">
+              <SelectValue placeholder="Hour">{props.value.hour}</SelectValue>
             </SelectTrigger>
           </SelectTimePopover>
         </Select>
       </div>
-      <div className='text-slate-500 m-1'>:</div>
-      <div className='flex-1'>
-        <Select defaultValue='00'>
+      <div className="text-slate-500 m-1">:</div>
+      <div className="flex-1">
+        <Select defaultValue="00">
           <SelectTimePopover
             items={minuteSelectItems}
             value={props.value.minute}
-            onChange={v => {
+            onChange={(v) => {
               onChange({ ...props.value, minute: v })
             }}
           >
-            <SelectTrigger className='line-clamp-1 truncate'>
-              <SelectValue placeholder='Minute'>
+            <SelectTrigger className="line-clamp-1 truncate">
+              <SelectValue placeholder="Minute">
                 {props.value.minute}
               </SelectValue>
             </SelectTrigger>
           </SelectTimePopover>
         </Select>
       </div>
-      <div className='text-slate-500 m-1'>:</div>
-      <div className='flex-1'>
-        <Select defaultValue='00'>
+      <div className="text-slate-500 m-1">:</div>
+      <div className="flex-1">
+        <Select defaultValue="00">
           <SelectTimePopover
             items={secondSelectItems}
             value={props.value.second}
-            onChange={v => {
+            onChange={(v) => {
               onChange({ ...props.value, second: v })
             }}
           >
-            <SelectTrigger className='line-clamp-1 truncate'>
-              <SelectValue placeholder='Second'>
+            <SelectTrigger className="line-clamp-1 truncate">
+              <SelectValue placeholder="Second">
                 {props.value.second}
               </SelectValue>
             </SelectTrigger>
@@ -141,7 +141,7 @@ function TimeColumns (props: {
   )
 }
 
-export function DatetimePicker (props: {
+export function DatetimePicker(props: {
   children: React.ReactNode
   value?: Date
   onChange?: (value: Date) => void
@@ -180,16 +180,16 @@ export function DatetimePicker (props: {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
-      <PopoverContent className='w-auto p-0'>
+      <PopoverContent className="w-auto p-0">
         <Calendar
-          mode='single'
+          mode="single"
           selected={props.value}
-          onSelect={v => onChange(v!, timeColumnsValue)}
+          onSelect={(v) => onChange(v!, timeColumnsValue)}
           initialFocus
         />
         <TimeColumns
           value={timeColumnsValue}
-          onChange={v => onChange(props.value, v)}
+          onChange={(v) => onChange(props.value, v)}
         />
       </PopoverContent>
     </Popover>
