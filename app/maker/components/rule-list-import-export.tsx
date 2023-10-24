@@ -72,7 +72,10 @@ export function RuleListImportExport(props: {
       <DialogContent className="max-w-[900px]">
         <DialogHeader>
           <DialogTitle>Import and Export</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogDescription>
+            Enter the json content copied to the clipboard into the input box
+            below to import it
+          </DialogDescription>
         </DialogHeader>
 
         <ReactCodeMirror
@@ -84,6 +87,7 @@ export function RuleListImportExport(props: {
               ? githubDarkInit(codeThemOptions)
               : githubLightInit(codeThemOptions)
           }
+          autoFocus={true}
           extensions={[json()]}
         ></ReactCodeMirror>
 
@@ -94,9 +98,12 @@ export function RuleListImportExport(props: {
               {isCoped && <CheckIcon className="ml-2 w-5 h-5" />}
             </Button>
           </CopyToClipboard>
-
           <Button onClick={onImport}>Import</Button>
         </DialogFooter>
+
+        <div className="text-orange-400 text-sm text-right mt-[-8px]">
+          Warning: Import will overwrite existing rules
+        </div>
       </DialogContent>
     </Dialog>
   )

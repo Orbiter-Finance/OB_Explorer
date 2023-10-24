@@ -117,6 +117,7 @@ export function RuleList() {
   const [expanded, setExpanded] = useState<ExpandedState>({})
   useMemo(() => {
     const _rules = convertToOneways(latestRules)
+    setChangedRules([])
     setUNSubmittedRules(_rules)
     setRules([..._rules])
   }, [latestRules])
@@ -135,8 +136,8 @@ export function RuleList() {
     setChangedRules(_changedRules)
   }
   const onImport = async (_rules: RuleOnewayInterface[]) => {
-    setRules([])
-    setUNSubmittedRules(_rules)
+    setRules([..._rules])
+    setUNSubmittedRules([])
     setChangedRules(_rules)
   }
 
@@ -479,7 +480,6 @@ export function RuleList() {
                     if (data.status !== 'success' || data.open === true) return
                     refetch()
                     setUNSubmittedRules([...rules])
-                    setChangedRules([])
                   }}
                 >
                   <Button>Submit modifies</Button>

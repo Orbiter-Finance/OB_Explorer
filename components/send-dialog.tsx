@@ -36,8 +36,8 @@ export function SendDialog(props: {
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [enableTime, setEnableTime] = useState(
-    dayjs().startOf('minute').add(20, 'minute').unix(),
-  ) // 20 minutes
+    dayjs().startOf('minute').add(10, 'minute').unix(),
+  ) // 10 minutes
   const [sendStatus, setSendStatus] = useState<
     'loading' | 'success' | 'error'
   >()
@@ -53,7 +53,7 @@ export function SendDialog(props: {
 
     // TODO: should from OR_Manager contract
     if (props.requiredEnableTime) {
-      const minEnableTime = Date.now() + 5 * 60 * 1000
+      const minEnableTime = Date.now() + 2 * 60 * 1000
 
       if ((enableTime || 0) * 1000 < minEnableTime)
         throw new Error(

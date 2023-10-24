@@ -21,12 +21,19 @@ import { appMainnet } from '@/config/env'
 
 const mainnetChains = [mainnet, arbitrum, optimism, zkSync, scroll]
 
-const testChains = [goerli, arbitrumGoerli, optimismGoerli, zkSyncTestnet, scrollSepolia]
+const testChains = [
+  goerli,
+  arbitrumGoerli,
+  optimismGoerli,
+  zkSyncTestnet,
+  scrollSepolia,
+]
 
 const config = createConfig(
   getDefaultConfig({
     // Required API Keys
     alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+    infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
     walletConnectProjectId:
       process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '',
 
