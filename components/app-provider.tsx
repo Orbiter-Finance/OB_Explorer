@@ -32,8 +32,8 @@ const testChains = [
 const config = createConfig(
   getDefaultConfig({
     // Required API Keys
-    alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID,
-    infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
+    alchemyId: (process.env.NEXT_PUBLIC_ALCHEMY_ID || '').trim(),
+    infuraId: (process.env.NEXT_PUBLIC_INFURA_ID || '').trim(),
     walletConnectProjectId:
       process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '',
 
