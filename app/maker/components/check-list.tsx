@@ -18,7 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import ORMakerDepositAbi from '@/config/abis/ORMakerDeposit.abi.json'
-import { beforeUpdate } from '@/lib/utils'
+import { beforeUpdate, equalBN } from '@/lib/utils'
 import {
   flexRender,
   getCoreRowModel,
@@ -85,14 +85,18 @@ export function CheckList(props: ICheckListData) {
   const [chainsInitChecked, setChainsInitChecked] = React.useState(0)
   const { resolvedTheme } = useTheme()
   const { checkChainIdToMainnet } = useCheckChainId()
-  const dealerMapping =
-    (mdcs.length > 0 && mdcs[0]?.mapping && mdcs[0].mapping?.dealerMapping) ||
-    []
-  const ebcMapping =
-    (mdcs.length > 0 && mdcs[0]?.mapping && mdcs[0].mapping?.ebcMapping) || []
-  const chainIdMapping =
-    (mdcs.length > 0 && mdcs[0]?.mapping && mdcs[0].mapping?.chainIdMapping) ||
-    []
+
+  // The current mdc settings are presented first, if not, the one with index 0 is used.
+  let targetMapping = mdcs?.[0]?.mapping || undefined
+  for (const item of mdcs) {
+    if (equalBN(item.id, ownerContractAddress)) {
+      targetMapping = item.mapping
+      break
+    }
+  }
+  const dealerMapping = targetMapping?.dealerMapping || []
+  const ebcMapping = targetMapping?.ebcMapping || []
+  const chainIdMapping = targetMapping?.chainIdMapping || []
 
   const initCheckedData = (
     allList: InitCheckedDataInterface,

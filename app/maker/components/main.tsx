@@ -123,7 +123,7 @@ function useCheckListData() {
       setEbcsRels(ebcRels)
       setChainInfoUpdatedsList(chainRels)
       setMdcs(mdcs)
-      setOwnerContractAddress(mdcs?.[0]?.id || '')
+      setOwnerContractAddress(predictMDCAddress(account.address) as Address)
       setLoading(false)
     },
     { reject: () => setLoading(false) },
