@@ -82,6 +82,7 @@ export function RuleListImportExport(props: {
           value={code}
           onChange={(c) => setCode(c)}
           height="420px"
+          maxWidth="850px"
           theme={
             resolvedTheme === 'dark'
               ? githubDarkInit(codeThemOptions)
