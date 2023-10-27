@@ -12,7 +12,7 @@ import { PERCENT_RATIO_MULTIPLE } from '@/config/constants'
 import { getChainName } from '@/config/chain-list'
 
 const checkListMaxNumList = {
-  Dealers: 9,
+  Dealers: 99,
   Ebcs: 9,
   Chains: 99,
 }
