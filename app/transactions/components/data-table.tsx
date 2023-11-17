@@ -33,7 +33,6 @@ interface DataTableProps<TData, TValue> {
     pageIndex: number
     pageSize: number
   }
-  pageType?: string
 }
 
 export function DataTable<TData, TValue>({
@@ -41,7 +40,6 @@ export function DataTable<TData, TValue>({
   data,
   pagination,
   loading,
-  pageType = '',
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =

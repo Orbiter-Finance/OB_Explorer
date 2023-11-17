@@ -31,7 +31,35 @@ export type Result = {
   }
 }
 
+export enum ListTypes {
+  all,
+  unRefunded,
+  refunded,
+}
+
+const listTypesLabel = {
+  all: 'All',
+  unRefunded: 'Not refunded',
+  refunded: 'Refunded',
+}
+
+export const listTypes = [
+  {
+    label: listTypesLabel.all,
+    value: ListTypes.all,
+  },
+  {
+    label: listTypesLabel.unRefunded,
+    value: ListTypes.unRefunded,
+  },
+  {
+    label: listTypesLabel.refunded,
+    value: ListTypes.refunded,
+  },
+]
+
 export interface ITxListParams {
+  listType?: ListTypes
   pageIndex: number
   pageSize: number
   makerAddress?: string
@@ -39,12 +67,14 @@ export interface ITxListParams {
 
 export async function fetchData(params: ITxListParams): Promise<Result> {
   try {
-    const cParams = params.makerAddress ? [params.pageSize, params.pageIndex, params.makerAddress] : [params.pageSize, params.pageIndex]
+    const cParams = params.makerAddress
+      ? [params.pageSize, params.pageIndex, params.makerAddress]
+      : [params.pageSize, params.pageIndex]
     const res: Result = await axiosService.post(openapiBaseUrl, {
       id: 1,
       jsonrpc: '2.0',
       method: 'orbiter_txList',
-      params: [0, ...cParams],
+      params: [params?.listType || 0, ...cParams],
     })
     if (res?.data?.result && Object.keys(res.data.result).length > 0) {
       return res
