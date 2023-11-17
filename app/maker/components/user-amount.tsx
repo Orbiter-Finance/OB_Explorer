@@ -207,7 +207,7 @@ export function UserAmount(props: IUserAmountSpcProps) {
   }
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 max-w-[400px]">
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="flex">
@@ -228,7 +228,6 @@ export function UserAmount(props: IUserAmountSpcProps) {
               <TabsContent value="deposit">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Deposit</CardTitle>
                     <CardDescription>Deposit pledge amount</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-2">
@@ -274,7 +273,6 @@ export function UserAmount(props: IUserAmountSpcProps) {
               <TabsContent value="withdraw">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Withdraw</CardTitle>
                     <CardDescription>Withdraw pledge amount</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-2">

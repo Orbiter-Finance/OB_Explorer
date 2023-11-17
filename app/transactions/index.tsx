@@ -2,7 +2,13 @@
 import * as React from 'react'
 import { columns } from './components/columns'
 import { DataTable } from './components/data-table'
-import { fetchData, ListItem, ITxListParams } from './fetchData'
+import {
+  fetchData,
+  listTypes,
+  ListTypes,
+  ListItem,
+  ITxListParams,
+} from './fetchData'
 import { DataTablePaginationCopy } from './components/data-table-pagination-copy'
 import { ColumnDef } from '@tanstack/react-table'
 import { useAccount } from 'wagmi'
@@ -21,12 +27,9 @@ export default function TransactionsPage(props: TransactionsPagePops) {
   const [pageIndex, setPageIndex] = React.useState<number>(1)
   const [pageSize, setPageSize] = React.useState<number>(30)
   const [pageCount, setPageCount] = React.useState<number>(0)
+  const [listType, setListType] = React.useState<number>(ListTypes.all)
   const [isHadNextPage, setIsHadNextPage] = React.useState<boolean>(false)
   const [loading, setLoading] = React.useState<boolean>(false)
-
-  const isHadData = React.useMemo(() => {
-    return data.length > 0
-  }, [data])
 
   const queryTableData = async (
     params: ITxListParams,
@@ -64,52 +67,45 @@ export default function TransactionsPage(props: TransactionsPagePops) {
   )
 
   React.useEffect(() => {
-    let interval: any = null
-    if (!isHadData) {
-      queryTableData({
-        pageIndex,
-        pageSize,
-      })
-    } else if (isHadData) {
-      if (pageIndex === 1) {
-        queryTableData({
-          pageIndex,
-          pageSize,
-        })
-        interval = setInterval(() => {
-          queryTableData(
-            {
-              pageIndex,
-              pageSize,
-            },
-            false,
-          )
-        }, 1000)
-      } else if (pageIndex > 1) {
-        queryTableData({
-          pageIndex,
-          pageSize,
-        })
-      }
+    let interval: NodeJS.Timer
+    queryTableData({
+      listType,
+      pageIndex,
+      pageSize,
+    })
+    if (pageIndex === 1) {
+      interval = setInterval(() => {
+        queryTableData(
+          {
+            listType,
+            pageIndex,
+            pageSize,
+          },
+          false,
+        )
+      }, 1000)
     }
     return () => interval && clearTimeout(interval)
-  }, [pageIndex, pageSize, isHadData])
+  }, [pageIndex, pageSize, listType])
 
   return (
     <main className="container flex">
       <div className="h-full flex-1 flex-col space-y-8 pt-8 md:flex">
         <DataTablePaginationCopy
           paginationPageSizeList={paginationPageSizeList}
+          listTypes={listTypes}
           pageIndex={pageIndex}
           pageSize={pageSize}
           pageCount={pageCount}
+          pageType={pageType}
+          listType={listType}
           isHadNextPage={isHadNextPage}
           setIsHadNextPage={setIsHadNextPage}
           setPageIndex={setPageIndex}
           setPageSize={setPageSize}
+          setListType={setListType}
         />
         <DataTable
-          pageType={pageType}
           pagination={pagination}
           loading={loading}
           data={data}

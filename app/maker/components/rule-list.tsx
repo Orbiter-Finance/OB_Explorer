@@ -442,19 +442,19 @@ export function RuleList() {
           <CardTitle className="flex">
             <div className="flex-1">Rules</div>
             <div className="flex items-center">
+              <Button
+                variant="outline"
+                className="mr-4"
+                onClick={() => refetch()}
+              >
+                Refresh
+              </Button>
+              <div className="mr-4 inline-block h-[26px] border"></div>
               <RuleListImportExport rules={rules} onImport={onImport}>
                 <Button variant="outline" className="mr-4">
                   Import and Export
                 </Button>
               </RuleListImportExport>
-              <div className="mr-4 inline-block h-[26px] border"></div>
-              <Button
-                variant="outline"
-                className="mr-2"
-                onClick={() => refetch()}
-              >
-                Refresh
-              </Button>
               <RuleModify
                 rule={newRule}
                 onChange={(rule) => {

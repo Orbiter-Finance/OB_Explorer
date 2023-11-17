@@ -1,7 +1,6 @@
 import { BigNumberish } from 'ethers'
-import chainListMainnet from './chainList.mainnet'
-import chainListTestnet from './chainList.testnet'
-import { appMainnet } from '@/config/env'
+import axiosService from '@/lib/request'
+import { openapiBaseUrl } from '@/config/env'
 
 export interface ChainInterface {
   chainId: string | number
@@ -37,10 +36,38 @@ export interface ChainInterface {
   infoURL?: string
 }
 
-// @ts-ignore
-export const chainList: ChainInterface[] = appMainnet
-  ? chainListMainnet
-  : chainListTestnet
+interface GetChainListResult {
+  data: {
+    result: {
+      chainList: ChainInterface[]
+    }
+  }
+}
+
+export let chainList: ChainInterface[] = []
+
+async function getChainList(): Promise<ChainInterface[]> {
+  try {
+    if (chainList.length > 0) {
+      return chainList
+    }
+    const res: GetChainListResult = await axiosService.post(openapiBaseUrl, {
+      id: 1,
+      jsonrpc: '2.0',
+      method: 'orbiter_getTradingPairs',
+      params: [],
+    })
+    const result = res?.data?.result
+    if (result && Object.keys(result).length > 0) {
+      chainList = result?.chainList ?? []
+      return chainList
+    } else {
+      return Promise.reject(res)
+    }
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
 
 export function getChainName(chainId: number | string) {
   for (const chain of chainList) {
@@ -48,3 +75,5 @@ export function getChainName(chainId: number | string) {
   }
   return undefined
 }
+
+getChainList()
