@@ -6,14 +6,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { StatusEnum, Versions } from '../fetchData'
+import {
+  StatusEnum,
+  Versions,
+  selectHashList,
+  selectHashValues,
+} from '../fetchData'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { DatetimePicker } from '@/components/datetime-picker'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { dateFormatStandard } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import dayjs from 'dayjs'
+import { ChainInterface } from '@/config/chain-list'
 
 interface DataTableSearchBarProps {
   status: StatusEnum
@@ -41,6 +46,7 @@ interface DataTableSearchBarProps {
   endTime?: Date
   setEndTime: Function
   resetSearchParams: Function
+  chainList: ChainInterface[]
 }
 
 export function DataTableSearchBar(props: DataTableSearchBarProps) {
@@ -51,7 +57,9 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
     version,
     setVersion,
     versionList,
+    sourceChainId,
     setSourceChainId,
+    destChainId,
     setDestChainId,
     setSourceHash,
     setDestHash,
@@ -60,12 +68,28 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
     endTime,
     setEndTime,
     resetSearchParams,
+    chainList,
   } = props
 
-  const [showSourceChainId, setShowSourceChainId] = useState('')
-  const [showDestChainId, setShowDestChainId] = useState('')
+  const [selectHashType, setSelectHashType] = useState(selectHashValues.source)
   const [showSourceHash, setShowSourceHash] = useState('')
   const [showDestHash, setShowDestHash] = useState('')
+
+  const isSelectHashSource = useMemo(() => {
+    return selectHashType === selectHashValues.source
+  }, [selectHashType])
+
+  const showHash = useMemo(() => {
+    return isSelectHashSource ? showSourceHash : showDestHash
+  }, [isSelectHashSource, showSourceHash, showDestHash])
+
+  const setShowHashFunction = useMemo(() => {
+    return isSelectHashSource ? setShowSourceHash : setShowDestHash
+  }, [isSelectHashSource, setShowSourceHash, setShowDestHash])
+
+  const setHashFunction = useMemo(() => {
+    return isSelectHashSource ? setSourceHash : setDestHash
+  }, [isSelectHashSource, setSourceHash, setDestHash])
 
   return (
     <div className="flex flex-wrap">
@@ -144,84 +168,100 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
           </DatetimePicker>
         </div>
       </div>
-      <div className="min-w-full flex items-center mb-4">
-        <div className="flex flex-1 items-center mr-4">
-          <Label htmlFor="source-hash">Source Hash:</Label>
-          <Input
-            id="source-hash"
-            placeholder="Source hash"
-            value={showSourceHash}
-            onChange={(e) => {
-              const val = e.target.value ?? ''
-              setShowSourceHash(val)
-            }}
-            onBlur={() => {
-              setSourceHash(showSourceHash)
-            }}
-          />
-        </div>
-        <div className="flex flex-1 items-center">
-          <Label htmlFor="dest-hash">Dest Hash:</Label>
-          <Input
-            id="dest-hash"
-            placeholder="Dest hash"
-            value={showDestHash}
-            onChange={(e) => {
-              const val = e.target.value ?? ''
-              setShowDestHash(val)
-            }}
-            onBlur={() => {
-              setDestHash(showDestHash)
-            }}
-          />
-        </div>
-      </div>
       <div className="flex min-w-full">
-        <div className="flex-1 flex">
+        <div className="flex-1 flex mr-4">
           <div className="flex items-center mr-4">
-            <Label htmlFor="source-chain-id">Source Chain:</Label>
-            <Input
-              id="source-chain-id"
-              placeholder="Source chain id"
-              value={showSourceChainId}
-              onChange={(e) => {
-                const val = e.target.value ?? ''
-                setShowSourceChainId(val)
+            <div className="mr-4">Source Chain:</div>
+            <Select
+              value={sourceChainId}
+              onValueChange={(value) => {
+                setSourceChainId(value)
               }}
-              onBlur={() => {
-                setSourceChainId(showSourceChainId)
-              }}
-            />
+            >
+              <SelectTrigger className="h-8 w-[160px] mr-4">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="max-h-[400px]" side="top">
+                {chainList.map((item) => (
+                  <SelectItem key={item.chainId} value={`${item.chainId}`}>
+                    {item.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex items-center">
-            <Label htmlFor="dest-chain-id">Dest Chain:</Label>
-            <Input
-              id="dest-chain-id"
-              placeholder="Dest chain id"
-              value={showDestChainId}
-              onChange={(e) => {
-                const val = e.target.value ?? ''
-                setShowDestChainId(val)
+            <div className="mr-4">Dest Chain:</div>
+            <Select
+              value={destChainId}
+              onValueChange={(value) => {
+                setDestChainId(value)
               }}
-              onBlur={() => {
-                setDestChainId(showDestChainId)
-              }}
-            />
+            >
+              <SelectTrigger className="h-8 w-[160px] mr-4">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="max-h-[400px]" side="top">
+                {chainList.map((item) => (
+                  <SelectItem key={item.chainId} value={`${item.chainId}`}>
+                    {item.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
-        <Button
-          className="mr-2 "
-          onClick={() => {
-            resetSearchParams()
-            setShowSourceChainId('')
-            setShowDestChainId('')
-            setShowSourceHash('')
-            setShowDestHash('')
-          }}
-        >
-          Reset
-        </Button>
+        <div className="flex flex-1 items-center">
+          <Select
+            value={selectHashType}
+            onValueChange={(value) => {
+              setSelectHashType(value)
+              if (value === selectHashValues.source) {
+                setDestHash('')
+                setShowDestHash('')
+              } else {
+                setSourceHash('')
+                setShowSourceHash('')
+              }
+            }}
+          >
+            <SelectTrigger className="h-8 w-[140px] mr-4">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent side="top">
+              {selectHashList.map((item) => (
+                <SelectItem key={item.value} value={`${item.value}`}>
+                  {item.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Input
+            id="source-hash"
+            className="w-[600px]"
+            placeholder="Select and Input Chain Hash"
+            value={showHash}
+            onChange={(e) => {
+              const val = e.target.value ?? ''
+              setShowHashFunction(val)
+            }}
+            onBlur={() => {
+              setHashFunction(showHash)
+            }}
+          />
+        </div>
       </div>
+      <Button
+        className="mt-4"
+        onClick={() => {
+          resetSearchParams()
+          setShowSourceHash('')
+          setShowDestHash('')
+          setSelectHashType(selectHashValues.source)
+        }}
+      >
+        Reset
+      </Button>
     </div>
   )
 }

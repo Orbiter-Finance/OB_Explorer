@@ -46,7 +46,7 @@ interface GetChainListResult {
 
 export let chainList: ChainInterface[] = []
 
-async function getChainList(): Promise<ChainInterface[]> {
+export async function getChainList(): Promise<ChainInterface[]> {
   try {
     if (chainList.length > 0) {
       return chainList
