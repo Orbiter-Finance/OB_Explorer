@@ -14,21 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ListTypes } from '../fetchData'
 
 interface DataTablePaginationCopyProps {
   paginationPageSizeList: number[]
-  listTypes: {
-    label: string
-    value: ListTypes
-  }[]
   pageIndex: number
   pageSize: number
   pageCount: number
   pageType: string
   isHadNextPage: boolean
-  listType: number
-  setListType: Function
   setPageIndex: Function
   setPageSize: Function
   setIsHadNextPage: Function
@@ -37,9 +30,6 @@ interface DataTablePaginationCopyProps {
 export function DataTablePaginationCopy(props: DataTablePaginationCopyProps) {
   const {
     paginationPageSizeList,
-    listTypes,
-    listType,
-    setListType,
     pageIndex,
     pageSize,
     pageCount,
@@ -101,28 +91,6 @@ export function DataTablePaginationCopy(props: DataTablePaginationCopyProps) {
           </Select>
         </div>
         <div className="flex justify-end">
-          {pageType === 'maker' && (
-            <div className="flex items-center">
-              <div className="mr-4">Search by:</div>
-              <Select
-                value={listType + ''}
-                onValueChange={(value) => {
-                  setListType(Number(value))
-                }}
-              >
-                <SelectTrigger className="h-8 w-[140px]">
-                  <SelectValue placeholder={'All'} />
-                </SelectTrigger>
-                <SelectContent side="top">
-                  {listTypes.map((item) => (
-                    <SelectItem key={item.value} value={`${item.value}`}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
           <div className="flex w-[150px] items-center justify-center text-sm font-medium">
             Page {pageIndex} of {pageCount}
           </div>

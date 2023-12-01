@@ -31,50 +31,106 @@ export type Result = {
   }
 }
 
-export enum ListTypes {
+export enum StatusEnum {
   all,
   unRefunded,
   refunded,
 }
 
-const listTypesLabel = {
+const statusLabel = {
   all: 'All',
   unRefunded: 'Not refunded',
   refunded: 'Refunded',
 }
 
-export const listTypes = [
+export enum Versions {
+  all = '',
+  v1 = '1',
+  v3 = '2',
+}
+
+const versionLabelList = {
+  all: 'All',
+  v1: 'Version 1',
+  v3: 'Dealer version',
+}
+
+export const statusList = [
   {
-    label: listTypesLabel.all,
-    value: ListTypes.all,
+    label: statusLabel.all,
+    value: StatusEnum.all,
   },
   {
-    label: listTypesLabel.unRefunded,
-    value: ListTypes.unRefunded,
+    label: statusLabel.unRefunded,
+    value: StatusEnum.unRefunded,
   },
   {
-    label: listTypesLabel.refunded,
-    value: ListTypes.refunded,
+    label: statusLabel.refunded,
+    value: StatusEnum.refunded,
+  },
+]
+
+export const versionList = [
+  {
+    label: versionLabelList.all,
+    value: Versions.all,
+  },
+  {
+    label: versionLabelList.v1,
+    value: Versions.v1,
+  },
+  {
+    label: versionLabelList.v3,
+    value: Versions.v3,
   },
 ]
 
 export interface ITxListParams {
-  listType?: ListTypes
+  status?: StatusEnum
   pageIndex: number
   pageSize: number
+  version: string
+  sourceChainId: string
+  destChainId: string
+  sourceHash: string
+  destHash: string
+  startTime?: Date
+  endTime?: Date
   makerAddress?: string
 }
 
 export async function fetchData(params: ITxListParams): Promise<Result> {
+  const {
+    status = 0,
+    pageSize,
+    pageIndex,
+    makerAddress = '',
+    startTime = 0,
+    endTime = new Date().valueOf(),
+    sourceChainId = '',
+    destChainId = '',
+    sourceHash = '',
+    destHash = '',
+    version = '',
+  } = params
   try {
-    const cParams = params.makerAddress
-      ? [params.pageSize, params.pageIndex, params.makerAddress]
-      : [params.pageSize, params.pageIndex]
+    const cParams = [
+      status,
+      pageSize,
+      pageIndex,
+      makerAddress,
+      [startTime, endTime],
+      sourceChainId,
+      destChainId,
+      sourceHash,
+      destHash,
+      version,
+    ]
     const res: Result = await axiosService.post(openapiBaseUrl, {
       id: 1,
       jsonrpc: '2.0',
       method: 'orbiter_txList',
-      params: [params?.listType || 0, ...cParams],
+      params: cParams,
     })
     if (res?.data?.result && Object.keys(res.data.result).length > 0) {
       return res

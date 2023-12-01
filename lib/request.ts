@@ -14,7 +14,7 @@ interface AxiosConfig {
 const axiosConfig: AxiosConfig = {
   baseURL_dev: '',
   baseURL_prod: '',
-  timeout: 5000,
+  timeout: 10000,
   withCredentials: true,
   retries: 5,
   shouldResetTimeout: true,
@@ -32,8 +32,8 @@ const axiosService = Axios.create({
 axiosRetry(axiosService, {
   retries: axiosConfig.retries,
   shouldResetTimeout: axiosConfig.shouldResetTimeout,
-  retryDelay: retryCount => retryCount * axiosConfig.retryDelay,
-  retryCondition: error => {
+  retryDelay: (retryCount) => retryCount * axiosConfig.retryDelay,
+  retryCondition: (error) => {
     return error.message.includes('timeout')
   },
 })
@@ -45,7 +45,7 @@ axiosService.interceptors.request.use(
     }
     return config
   },
-  error => errorHandler(error),
+  (error) => errorHandler(error),
 )
 
 axiosService.interceptors.response.use(
@@ -53,7 +53,7 @@ axiosService.interceptors.response.use(
     if (!response) return
     return response
   },
-  error => errorHandler(error),
+  (error) => errorHandler(error),
 )
 
 const errorHandler = (error: any) => {
