@@ -68,7 +68,7 @@ export const columns: ColumnDef<ListItem>[] = [
     header: 'Coin',
     cell: ({ row }) => {
       return (
-        <div className="flex w-24 space-x-2">
+        <div className="flex space-x-2">
           <div className="max-w-[500px] flex items-center truncate text-sm font-normal">
             {row.original.fromSymbol || '-'}
           </div>
@@ -103,7 +103,7 @@ export const columns: ColumnDef<ListItem>[] = [
     header: () => <div>Source</div>,
     cell: ({ row }) => {
       return (
-        <div className="flex flex-col w-[150px]">
+        <div className="flex flex-col">
           <div>{getChainName(row.original.fromChainId) || '-'}</div>
           <div className="max-w-[100px] cursor-pointer text-blue-500">
             <TransactionDetail
@@ -120,7 +120,7 @@ export const columns: ColumnDef<ListItem>[] = [
     header: () => <div>Dest</div>,
     cell: ({ row }) => {
       return (
-        <div className="flex w-[150px] flex-col">
+        <div className="flex flex-col">
           <div>{getChainName(row.original.toChainId) || '-'}</div>
           <span className="max-w-[100px] cursor-pointer text-blue-500">
             <TransactionDetail
@@ -139,7 +139,7 @@ export const columns: ColumnDef<ListItem>[] = [
         new Date(row.original.fromTimestamp).getTime(),
       )
       return (
-        <div className="flex w-[150px] items-center">
+        <div className="flex items-center">
           {renderTooltipProvider(
             <span>{getFromNowDate(currentDate)}</span>,
             <p>{dateFormatStandard(currentDate)}</p>,
@@ -158,7 +158,7 @@ export const columns: ColumnDef<ListItem>[] = [
         return null
       }
       return (
-        <div className="flex w-[150px] items-center">
+        <div className="flex items-center">
           <span>{status}</span>
         </div>
       )
