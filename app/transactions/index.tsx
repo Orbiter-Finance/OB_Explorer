@@ -155,62 +155,45 @@ export default function TransactionsPage(props: TransactionsPagePops) {
   return (
     <main className="container flex">
       <div className="h-full flex-1 flex-col space-y-8 pt-8 md:flex">
-        {!isMaker && (
-          <DataTablePaginationCopy
-            paginationPageSizeList={paginationPageSizeList}
-            pageIndex={pageIndex}
-            pageSize={pageSize}
-            pageCount={pageCount}
-            pageType={pageType}
-            isHadNextPage={isHadNextPage}
-            setIsHadNextPage={setIsHadNextPage}
-            setPageIndex={setPageIndex}
-            setPageSize={setPageSize}
-          />
-        )}
-        {isMaker && (
-          <DataTableSearchBar
-            status={status}
-            statusList={statusList}
-            setStatus={setStatus}
-            version={version}
-            versionList={versionList}
-            setVersion={setVersion}
-            sourceChainId={sourceChainId}
-            setSourceChainId={setSourceChainId}
-            destChainId={destChainId}
-            setDestChainId={setDestChainId}
-            sourceHash={sourceHash}
-            setSourceHash={setSourceHash}
-            destHash={destHash}
-            setDestHash={setDestHash}
-            startTime={startTime}
-            setStartTime={setStartTime}
-            endTime={endTime}
-            setEndTime={setEndTime}
-            resetSearchParams={resetSearchParams}
-            chainList={chainList}
-          />
-        )}
+        <DataTableSearchBar
+          status={status}
+          statusList={statusList}
+          setStatus={setStatus}
+          version={version}
+          versionList={versionList}
+          setVersion={setVersion}
+          sourceChainId={sourceChainId}
+          setSourceChainId={setSourceChainId}
+          destChainId={destChainId}
+          setDestChainId={setDestChainId}
+          sourceHash={sourceHash}
+          setSourceHash={setSourceHash}
+          destHash={destHash}
+          setDestHash={setDestHash}
+          startTime={startTime}
+          setStartTime={setStartTime}
+          endTime={endTime}
+          setEndTime={setEndTime}
+          resetSearchParams={resetSearchParams}
+          chainList={chainList}
+        />
         <DataTable
           pagination={pagination}
           loading={loading}
           data={data}
           columns={[...columns, ...otherColumns]}
         />
-        {isMaker && (
-          <DataTablePaginationCopy
-            paginationPageSizeList={paginationPageSizeList}
-            pageIndex={pageIndex}
-            pageSize={pageSize}
-            pageCount={pageCount}
-            pageType={pageType}
-            isHadNextPage={isHadNextPage}
-            setIsHadNextPage={setIsHadNextPage}
-            setPageIndex={setPageIndex}
-            setPageSize={setPageSize}
-          />
-        )}
+        <DataTablePaginationCopy
+          paginationPageSizeList={paginationPageSizeList}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          pageCount={pageCount}
+          pageType={pageType}
+          isHadNextPage={isHadNextPage}
+          setIsHadNextPage={setIsHadNextPage}
+          setPageIndex={setPageIndex}
+          setPageSize={setPageSize}
+        />
       </div>
     </main>
   )

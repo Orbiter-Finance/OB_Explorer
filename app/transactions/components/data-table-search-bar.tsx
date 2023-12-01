@@ -238,7 +238,7 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
           </Select>
           <Input
             id="source-hash"
-            className="w-[600px]"
+            className="flex-1"
             placeholder="Select and Input Chain Hash"
             value={showHash}
             onChange={(e) => {
