@@ -171,7 +171,7 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
       <div className="flex min-w-full">
         <div className="flex-1 flex mr-4">
           <div className="flex items-center mr-4">
-            <div className="mr-4">Source Chain:</div>
+            <div className="mr-4 min-w-[110px]">Source Chain:</div>
             <Select
               value={sourceChainId}
               onValueChange={(value) => {
@@ -191,7 +191,7 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
             </Select>
           </div>
           <div className="flex items-center">
-            <div className="mr-4">Dest Chain:</div>
+            <div className="mr-4 min-w-[110px]">Dest Chain:</div>
             <Select
               value={destChainId}
               onValueChange={(value) => {
