@@ -85,6 +85,27 @@ export const versionList = [
   },
 ]
 
+const selectHashLabels = {
+  source: 'Source Hash',
+  dest: 'Dest Hash',
+}
+
+export const selectHashValues = {
+  source: 'source',
+  dest: 'dest',
+}
+
+export const selectHashList = [
+  {
+    label: selectHashLabels.source,
+    value: selectHashValues.source,
+  },
+  {
+    label: selectHashLabels.dest,
+    value: selectHashValues.dest,
+  },
+]
+
 export interface ITxListParams {
   status?: StatusEnum
   pageIndex: number

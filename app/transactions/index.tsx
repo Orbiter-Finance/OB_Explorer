@@ -15,6 +15,8 @@ import { DataTableSearchBar } from './components/data-table-search-bar'
 import { DataTablePaginationCopy } from './components/data-table-pagination-copy'
 import { ColumnDef } from '@tanstack/react-table'
 import { useAccount } from 'wagmi'
+import { getChainList } from '@/config/chain-list'
+import { ChainInterface } from '@/config/chain-list'
 
 const paginationPageSizeList = [10, 20, 30, 40, 50]
 
@@ -40,6 +42,7 @@ export default function TransactionsPage(props: TransactionsPagePops) {
   const [destHash, setDestHash] = React.useState<string>('')
   const [startTime, setStartTime] = React.useState<Date | undefined>(undefined)
   const [endTime, setEndTime] = React.useState<Date | undefined>(undefined)
+  const [chainList, setChainList] = React.useState<ChainInterface[]>([])
 
   const isMaker = React.useMemo(() => {
     return pageType === 'maker'
@@ -140,6 +143,15 @@ export default function TransactionsPage(props: TransactionsPagePops) {
     endTime,
   ])
 
+  const getChains = async () => {
+    const chainList = await getChainList()
+    setChainList(chainList || [])
+  }
+
+  React.useEffect(() => {
+    getChains()
+  }, [])
+
   return (
     <main className="container flex">
       <div className="h-full flex-1 flex-col space-y-8 pt-8 md:flex">
@@ -177,6 +189,7 @@ export default function TransactionsPage(props: TransactionsPagePops) {
             endTime={endTime}
             setEndTime={setEndTime}
             resetSearchParams={resetSearchParams}
+            chainList={chainList}
           />
         )}
         <DataTable
