@@ -4,11 +4,14 @@ import { columns } from './components/columns'
 import { DataTable } from './components/data-table'
 import {
   fetchData,
-  listTypes,
-  ListTypes,
+  statusList,
+  StatusEnum,
   ListItem,
   ITxListParams,
+  versionList,
+  Versions,
 } from './fetchData'
+import { DataTableSearchBar } from './components/data-table-search-bar'
 import { DataTablePaginationCopy } from './components/data-table-pagination-copy'
 import { ColumnDef } from '@tanstack/react-table'
 import { useAccount } from 'wagmi'
@@ -27,9 +30,31 @@ export default function TransactionsPage(props: TransactionsPagePops) {
   const [pageIndex, setPageIndex] = React.useState<number>(1)
   const [pageSize, setPageSize] = React.useState<number>(30)
   const [pageCount, setPageCount] = React.useState<number>(0)
-  const [listType, setListType] = React.useState<number>(ListTypes.all)
   const [isHadNextPage, setIsHadNextPage] = React.useState<boolean>(false)
   const [loading, setLoading] = React.useState<boolean>(false)
+  const [status, setStatus] = React.useState<number>(StatusEnum.all)
+  const [version, setVersion] = React.useState<string>(Versions.all)
+  const [sourceChainId, setSourceChainId] = React.useState<string>('')
+  const [destChainId, setDestChainId] = React.useState<string>('')
+  const [sourceHash, setSourceHash] = React.useState<string>('')
+  const [destHash, setDestHash] = React.useState<string>('')
+  const [startTime, setStartTime] = React.useState<Date | undefined>(undefined)
+  const [endTime, setEndTime] = React.useState<Date | undefined>(undefined)
+
+  const isMaker = React.useMemo(() => {
+    return pageType === 'maker'
+  }, [pageType])
+
+  const resetSearchParams = () => {
+    setStatus(StatusEnum.all)
+    setVersion(Versions.all)
+    setSourceChainId('')
+    setDestChainId('')
+    setSourceHash('')
+    setDestHash('')
+    setStartTime(undefined)
+    setEndTime(undefined)
+  }
 
   const queryTableData = async (
     params: ITxListParams,
@@ -37,7 +62,9 @@ export default function TransactionsPage(props: TransactionsPagePops) {
   ): Promise<void> => {
     try {
       needLoading && setLoading(true)
-      params.makerAddress = pageType === 'maker' ? account.address : void 0
+      params.makerAddress = isMaker
+        ? account.address?.toLocaleLowerCase()
+        : void 0
       const res = await fetchData(params)
       needLoading && setLoading(false)
       setData(res.data.result.list)
@@ -69,48 +96,108 @@ export default function TransactionsPage(props: TransactionsPagePops) {
   React.useEffect(() => {
     let interval: NodeJS.Timer
     queryTableData({
-      listType,
+      status,
       pageIndex,
       pageSize,
+      version,
+      sourceChainId,
+      destChainId,
+      sourceHash,
+      destHash,
+      startTime,
+      endTime,
     })
     if (pageIndex === 1) {
       interval = setInterval(() => {
         queryTableData(
           {
-            listType,
+            status,
             pageIndex,
             pageSize,
+            version,
+            sourceChainId,
+            destChainId,
+            sourceHash,
+            destHash,
+            startTime,
+            endTime,
           },
           false,
         )
-      }, 1000)
+      }, 2000)
     }
     return () => interval && clearTimeout(interval)
-  }, [pageIndex, pageSize, listType])
+  }, [
+    pageIndex,
+    pageSize,
+    status,
+    version,
+    sourceChainId,
+    destChainId,
+    sourceHash,
+    destHash,
+    startTime,
+    endTime,
+  ])
 
   return (
     <main className="container flex">
       <div className="h-full flex-1 flex-col space-y-8 pt-8 md:flex">
-        <DataTablePaginationCopy
-          paginationPageSizeList={paginationPageSizeList}
-          listTypes={listTypes}
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          pageCount={pageCount}
-          pageType={pageType}
-          listType={listType}
-          isHadNextPage={isHadNextPage}
-          setIsHadNextPage={setIsHadNextPage}
-          setPageIndex={setPageIndex}
-          setPageSize={setPageSize}
-          setListType={setListType}
-        />
+        {!isMaker && (
+          <DataTablePaginationCopy
+            paginationPageSizeList={paginationPageSizeList}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            pageCount={pageCount}
+            pageType={pageType}
+            isHadNextPage={isHadNextPage}
+            setIsHadNextPage={setIsHadNextPage}
+            setPageIndex={setPageIndex}
+            setPageSize={setPageSize}
+          />
+        )}
+        {isMaker && (
+          <DataTableSearchBar
+            status={status}
+            statusList={statusList}
+            setStatus={setStatus}
+            version={version}
+            versionList={versionList}
+            setVersion={setVersion}
+            sourceChainId={sourceChainId}
+            setSourceChainId={setSourceChainId}
+            destChainId={destChainId}
+            setDestChainId={setDestChainId}
+            sourceHash={sourceHash}
+            setSourceHash={setSourceHash}
+            destHash={destHash}
+            setDestHash={setDestHash}
+            startTime={startTime}
+            setStartTime={setStartTime}
+            endTime={endTime}
+            setEndTime={setEndTime}
+            resetSearchParams={resetSearchParams}
+          />
+        )}
         <DataTable
           pagination={pagination}
           loading={loading}
           data={data}
           columns={[...columns, ...otherColumns]}
         />
+        {isMaker && (
+          <DataTablePaginationCopy
+            paginationPageSizeList={paginationPageSizeList}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            pageCount={pageCount}
+            pageType={pageType}
+            isHadNextPage={isHadNextPage}
+            setIsHadNextPage={setIsHadNextPage}
+            setPageIndex={setPageIndex}
+            setPageSize={setPageSize}
+          />
+        )}
       </div>
     </main>
   )
