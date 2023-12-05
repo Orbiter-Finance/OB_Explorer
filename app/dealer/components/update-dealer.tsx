@@ -43,7 +43,7 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
   const handlerInputFeeRatio = (v: any): void => {
     let value = v.target.value
     value = value.replace(/[^0-9.]/g, '')
-    value = getDecimalPlaces(value) > 4 ? '0.0001' : value
+    value = getDecimalPlaces(value) > 4 ? inputFeeRatio : value
     value = value > MAX_FEE_RATIO ? MAX_FEE_RATIO : value
     v.target.value = value
     let number = parseFloat(value)
@@ -96,7 +96,6 @@ export function UpdateDealer({ dealerInfo }: IUpdateDealerInterface) {
           <Input
             id="feeRatio"
             placeholder="Input fee ratio"
-            type="number"
             defaultValue={
               dealerInfo?.feeRatio
                 ? Number(dealerInfo.feeRatio) / PERCENT_RATIO_MULTIPLE
