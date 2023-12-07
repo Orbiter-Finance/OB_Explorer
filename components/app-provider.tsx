@@ -18,6 +18,7 @@ import { scroll, scrollSepolia } from '@/config/defineChains'
 import { AppContext } from './app-context'
 import { useTheme } from 'next-themes'
 import { appMainnet } from '@/config/env'
+import connectkitTheme from '../config/connectkitTheme.json'
 
 const mainnetChains = [mainnet, arbitrum, optimism, zkSync, scroll]
 
@@ -66,6 +67,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       <WagmiConfig config={config}>
         <ConnectKitProvider
           mode={!theme || theme == 'system' ? 'auto' : (theme as any)}
+          customTheme={connectkitTheme}
         >
           {mounted && children}
         </ConnectKitProvider>

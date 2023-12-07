@@ -16,6 +16,7 @@ export function MainNav() {
   const hideTransactions = Number(params.get('hide_transactions')) === 1
   const showMaker = Number(params.get('show_maker')) === 1
   const showDealer = Number(params.get('show_dealer')) === 1
+  const showManager = Number(params.get('show_manager')) === 1
 
   return (
     <div className="mr-4 hidden md:flex">
@@ -76,6 +77,20 @@ export function MainNav() {
             )}
           >
             Dealer
+          </Link>
+        )}
+
+        {showManager && (
+          <Link
+            href={`/manager/${location.search}`}
+            className={cn(
+              'transition-colors hover:text-foreground/80',
+              pathname?.startsWith('/manager')
+                ? 'text-foreground font-bold'
+                : 'text-foreground/60',
+            )}
+          >
+            Manager
           </Link>
         )}
       </nav>

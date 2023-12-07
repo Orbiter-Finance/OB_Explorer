@@ -152,7 +152,7 @@ export function MakerFeeRatioAmount(props: IMakerFeeRatioAmountProps) {
         <CardHeader>
           <CardTitle>Deposit</CardTitle>
           <CardDescription>
-            {`Adjust your deposit here. Click ‘Deposit’ once confirmed.`}
+            {`Adjust your deposit here. Click 'Deposit' once confirmed.`}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">

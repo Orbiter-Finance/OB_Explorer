@@ -498,7 +498,7 @@ export function RuleList() {
             <div className="flex justify-between flex-wrap">
               <div className="w-full">
                 <div className="overflow-auto overflow-x-hidden relative">
-                  <Table divclassname="max-h-[60vh]">
+                  <Table divClassName="max-h-[60vh]">
                     <TableHeader
                       className="sticky top-0 z-10"
                       style={{

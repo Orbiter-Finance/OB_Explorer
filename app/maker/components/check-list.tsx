@@ -295,7 +295,7 @@ export function CheckList(props: ICheckListData) {
                       </span>
                     </div>
                     <div className="overflow-auto overflow-x-hidden relative">
-                      <Table divclassname="max-h-80">
+                      <Table divClassName="max-h-80">
                         <TableHeader
                           className="sticky top-0 z-10"
                           style={{

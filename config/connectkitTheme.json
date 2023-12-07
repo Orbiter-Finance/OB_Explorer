@@ -1,0 +1,11 @@
+{
+  "--ck-border-radius": "3px",
+  "--ck-overlay-backdrop-filter": "blur(3px)",
+  "--ck-qr-border-radius": "16px",
+  "--ck-connectbutton-border-radius": "3px",
+  "--ck-primary-button-border-radius": "3px",
+  "--ck-secondary-button-border-radius": "3px",
+  "--ck-tertiary-button-border-radius": "3px",
+  "--ck-recent-badge-border-radius": "3px",
+  "--ck-connectbutton-box-shadow": "0px 0px 2px 0px rgba(0, 0, 0, 0.2)"
+}
