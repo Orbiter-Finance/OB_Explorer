@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -71,29 +71,39 @@ const jumpPrefixes = {
 export function TransactionDetail(props: IDetailProps) {
   const { addressDetail, triggerText } = props
   const [dialogOpen, setDialogOpen] = useState(false)
+  const detailRef = useRef({} as Detail)
 
   const renderItem = (k: keyof Detail) => {
+    if (!dialogOpen) {
+      detailRef.current = {} as Detail
+      return
+    }
+    // when dialog is open, add cache to show detail.
+    detailRef.current =
+      Object.keys(detailRef.current).length > 0
+        ? detailRef.current
+        : addressDetail
     const baseLink =
       k == 'SourceChainHash' || k == 'Source'
-        ? addressDetail.JumpLinkSource
-        : addressDetail.JumpLinkDest
+        ? detailRef.current.JumpLinkSource
+        : detailRef.current.JumpLinkDest
 
     if (
-      !addressDetail[k] ||
-      addressDetail[k] == '-' ||
+      !detailRef.current[k] ||
+      detailRef.current[k] == '-' ||
       !jumpPrefixes[k] ||
       !baseLink ||
       baseLink == '-'
     )
-      return <span>{addressDetail[k] || '-'}</span>
+      return <span>{detailRef.current[k] || '-'}</span>
 
     return (
       <a
         className="text-blue-500 cursor-pointer"
         target="_blank"
-        href={baseLink + jumpPrefixes[k] + addressDetail[k]}
+        href={baseLink + jumpPrefixes[k] + detailRef.current[k]}
       >
-        {addressDetail[k] || '-'}
+        {detailRef.current[k] || '-'}
       </a>
     )
   }
