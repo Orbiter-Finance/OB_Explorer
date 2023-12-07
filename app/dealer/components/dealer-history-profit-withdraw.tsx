@@ -59,6 +59,8 @@ import { useCheckChainId } from '@/hooks/check-chainId'
 interface IDealerHistoryProfitWithdrawInterface {
   withdrawUser: 'Maker' | 'Dealer'
   accountAddress?: Address
+  hideCard?: boolean
+  hideInput?: boolean
 }
 
 enum MergeValueType {
@@ -105,7 +107,7 @@ type FirstZeroBits = string[]
 export function DealerHistoryProfitWithdraw(
   props: IDealerHistoryProfitWithdrawInterface,
 ) {
-  const { withdrawUser, accountAddress } = props
+  const { withdrawUser, accountAddress, hideCard, hideInput } = props
   const { resolvedTheme } = useTheme()
   const [loading, setLoading] = useState(false)
   const withdrawData = useRef<ListItem[]>([])
@@ -437,7 +439,7 @@ export function DealerHistoryProfitWithdraw(
   }
 
   const columns: ColumnDef<ListItem>[] = useMemo(() => {
-    return [
+    const a: ColumnDef<ListItem>[] = [
       {
         accessorKey: 'token_chain_id',
         header: () => <div>Chain</div>,
@@ -527,7 +529,9 @@ export function DealerHistoryProfitWithdraw(
           )
         },
       },
-      {
+    ]
+    if (!hideInput) {
+      a.push({
         accessorKey: 'input',
         header: () => <div>Withdrawal Amount</div>,
         cell: ({ row }) => {
@@ -540,8 +544,9 @@ export function DealerHistoryProfitWithdraw(
             />
           )
         },
-      },
-    ]
+      })
+    }
+    return a
   }, [getTokenDecimal])
 
   const table = useReactTable({
@@ -584,102 +589,112 @@ export function DealerHistoryProfitWithdraw(
     }
   }
 
-  return (
-    <Card className="flex-1">
-      <CardHeader>
-        <CardTitle className="flex justify-between relative">
-          Claim Dividends
-          {profitData.length > 0 && (
-            <>
-              <div
-                className={`animate-pulse w-2 h-2 ${withdrawStatusColor} absolute top-1 right-1 rounded-full`}
-              />
-              <SendDialog
-                onFinally={({ open }) => onFinally(open)}
-                send={() => onWithDraw()}
-              >
-                <div>
-                  <Button className="mr-2" onClick={beforeWithdrawAll}>
-                    Claim (All)
-                  </Button>
-                  <Button variant="outline" onClick={beforeWithdraw}>
-                    Claim Withdrawn Amount
-                  </Button>
-                </div>
-              </SendDialog>
-            </>
-          )}
-        </CardTitle>
-        <CardDescription>
-          View your dividends history and withdraw within the withdrawal time.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        {loading ? (
-          <Loading show={loading} className={'h-80'} />
-        ) : (
-          <div className="flex justify-between flex-wrap">
-            <div className="w-full">
-              <div className="overflow-auto overflow-x-hidden relative">
-                <Table divClassName="max-h-80">
-                  <TableHeader
-                    className="sticky top-0 z-10"
-                    style={{
-                      backgroundColor:
-                        resolvedTheme === 'dark' ? '#020817' : 'white',
-                    }}
-                  >
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <TableRow key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => {
-                          return (
-                            <TableHead key={header.id}>
-                              {header.isPlaceholder
-                                ? null
-                                : flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext(),
-                                  )}
-                            </TableHead>
-                          )
-                        })}
+  const ProfitTable = () => (
+    <>
+      {loading ? (
+        <Loading show={loading} className={'h-80'} />
+      ) : (
+        <div className="flex justify-between flex-wrap">
+          <div className="w-full">
+            <div className="overflow-auto overflow-x-hidden relative">
+              <Table divClassName="max-h-80">
+                <TableHeader
+                  className="sticky top-0 z-10"
+                  style={{
+                    backgroundColor:
+                      resolvedTheme === 'dark' ? '#020817' : 'white',
+                  }}
+                >
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext(),
+                                )}
+                          </TableHead>
+                        )
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && 'selected'}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell as any,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        ))}
                       </TableRow>
-                    ))}
-                  </TableHeader>
-                  <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                      table.getRowModel().rows.map((row) => (
-                        <TableRow
-                          key={row.id}
-                          data-state={row.getIsSelected() && 'selected'}
-                        >
-                          {row.getVisibleCells().map((cell) => (
-                            <TableCell key={cell.id}>
-                              {flexRender(
-                                cell.column.columnDef.cell as any,
-                                cell.getContext(),
-                              )}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          colSpan={columns.length}
-                          className="h-24 text-center"
-                        >
-                          No results.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </div>
+      )}
+    </>
   )
+
+  if (hideCard) {
+    return <ProfitTable />
+  } else {
+    return (
+      <Card className="flex-1">
+        <CardHeader>
+          <CardTitle className="flex justify-between relative">
+            Claim Dividends
+            {profitData.length > 0 && (
+              <>
+                <div
+                  className={`animate-pulse w-2 h-2 ${withdrawStatusColor} absolute top-1 right-1 rounded-full`}
+                />
+                <SendDialog
+                  onFinally={({ open }) => onFinally(open)}
+                  send={() => onWithDraw()}
+                >
+                  <div>
+                    <Button className="mr-2" onClick={beforeWithdrawAll}>
+                      Claim (All)
+                    </Button>
+                    <Button variant="outline" onClick={beforeWithdraw}>
+                      Claim Withdrawn Amount
+                    </Button>
+                  </div>
+                </SendDialog>
+              </>
+            )}
+          </CardTitle>
+          <CardDescription>
+            View your dividends history and withdraw within the withdrawal time.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <ProfitTable />
+        </CardContent>
+      </Card>
+    )
+  }
 }

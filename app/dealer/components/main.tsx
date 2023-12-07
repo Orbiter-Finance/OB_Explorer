@@ -40,7 +40,10 @@ export function DealerMain() {
       <div className="w-full flex justify-between">
         <UpdateDealer dealerInfo={dealerInfo}></UpdateDealer>
         {isHadDealerInfo && (
-          <DealerHistoryProfitWithdraw withdrawUser="Dealer"></DealerHistoryProfitWithdraw>
+          <DealerHistoryProfitWithdraw
+            accountAddress={account.address}
+            withdrawUser="Dealer"
+          ></DealerHistoryProfitWithdraw>
         )}
       </div>
       {isHadDealerInfo && (

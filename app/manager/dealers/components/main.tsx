@@ -1,5 +1,6 @@
 'use client'
 
+import { DealerHistoryProfitWithdraw } from '@/app/dealer/components/dealer-history-profit-withdraw'
 import { SkeletonTable } from '@/components/skeleton-table'
 import {
   Card,
@@ -29,9 +30,10 @@ import {
 import { BigNumber } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
 import React from 'react'
+import { Address } from 'viem'
 
 interface DealerInfo {
-  dealer: string
+  dealer: Address
   feeRatio: number
   boundMakers: string[]
   subRows?: []
@@ -81,7 +83,7 @@ export async function fetchDealers() {
     }
 
     dealers.push({
-      dealer: getAddress(item.id),
+      dealer: getAddress(item.id) as Address,
       feeRatio: BigNumber.from(item.feeRatio).toNumber(),
       boundMakers,
     })
@@ -191,19 +193,30 @@ export function ManagerDealersMain() {
               <TableBody>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && 'selected'}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
+                    <>
+                      <TableRow className="border-b-0">
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                      <TableRow key={'sub_' + row.id}>
+                        <TableCell></TableCell>
+                        <TableCell colSpan={row.getVisibleCells().length - 1}>
+                          <DealerHistoryProfitWithdraw
+                            accountAddress={row.original.dealer}
+                            withdrawUser="Dealer"
+                            hideCard={true}
+                            hideInput={true}
+                          ></DealerHistoryProfitWithdraw>
+                          {/* {renderSubComponent({ subRows: row.original.subRows })} */}
                         </TableCell>
-                      ))}
-                    </TableRow>
+                      </TableRow>
+                    </>
                   ))
                 ) : (
                   <TableRow>

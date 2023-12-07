@@ -161,11 +161,7 @@ function useSpvBind() {
 }
 
 export function MakerMain() {
-  // const account = useAccount()
-  const account = {
-    address: '0x8086061Cf07C03559fBB4AA58f191F9c4A5df2b2' as Address,
-  }
-
+  const account = useAccount()
   const mdcInfo = useMDCInfo()
 
   const checkListData = useCheckListData(account.address)
