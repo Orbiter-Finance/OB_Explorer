@@ -2,6 +2,6 @@
 import TransactionsPage from '@/app/transactions'
 import { otherColumns } from './columns'
 
-export default function MakerTransactions() {
+export default async function Page() {
   return <TransactionsPage pageType="maker" otherColumns={otherColumns} />
 }

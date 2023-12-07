@@ -2,32 +2,25 @@
 
 import { Button } from '@/components/ui/button'
 import { contracts } from '@/config/contracts'
+import { useCheckChainId } from '@/hooks/check-chainId'
 import { usePromiseWithToast } from '@/hooks/promise-with-toast'
 import { predictMDCAddress } from '@/lib/utils'
 import { ConnectKitButton } from 'connectkit'
 import { Loader2 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Address, Hex } from 'viem'
-import {
-  useAccount,
-  useContractRead,
-  useContractWrite,
-  usePublicClient,
-} from 'wagmi'
-import { RuleList } from './rule-list'
+import { useAccount, useContractWrite, usePublicClient } from 'wagmi'
 import { CheckList } from './check-list'
-import { UserAmount } from './user-amount'
 import { MakerFeeRatioAmount } from './maker-fee-ratio-amount'
-import { Spv } from './spv'
+import { RuleList } from './rule-list'
+import { IBindSpvResult, getBindSpvs } from './utils/getBindSpvs'
 import {
-  getCheckList,
   IChainInfoUpdatedItem,
   IDealerItem,
   IEbcItem,
   IMdcsItem,
+  getCheckList,
 } from './utils/getChecklist'
-import { getBindSpvs, IBindSpvResult } from './utils/getBindSpvs'
-import { useCheckChainId } from '@/hooks/check-chainId'
 
 function useMDCInfo() {
   const account = useAccount()
@@ -171,14 +164,11 @@ function useSpvBind() {
 export function MakerMain() {
   const account = useAccount()
   const mdcInfo = useMDCInfo()
+
   const checkListData = useCheckListData()
+
   const mdcDeploy = useMDCDeploy(mdcInfo.refetch, checkListData.refetch)
   const { bindSpvData, isSpvLoading } = useSpvBind()
-  const { data: dealerInfo } = useContractRead({
-    ...contracts.orFeeManager,
-    functionName: 'getDealerInfo',
-    args: [account?.address],
-  })
 
   if (!account.address) return <ConnectKitButton />
 
@@ -213,6 +203,7 @@ export function MakerMain() {
   return (
     <div>
       <CheckList checkListData={checkListData} />
+
       <div className="mt-4">
         <RuleList />
       </div>
@@ -226,11 +217,10 @@ export function MakerMain() {
       {/*    isSpvLoading={isSpvLoading}*/}
       {/*  ></Spv>*/}
       {/*</div>*/}
-      {dealerInfo && Object.keys(dealerInfo).length > 0 && (
-        <MakerFeeRatioAmount
-          ownerContractAddress={checkListData.ownerContractAddress}
-        />
-      )}
+
+      <MakerFeeRatioAmount
+        ownerContractAddress={checkListData.ownerContractAddress}
+      />
     </div>
   )
 }

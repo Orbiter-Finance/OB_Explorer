@@ -136,7 +136,7 @@ export const chainsColumn: ColumnDef<IChainInfoUpdatedItem>[] = [
   },
   {
     accessorKey: 'name',
-    header: () => <div>Chains</div>,
+    header: () => <div>Chain</div>,
     cell: ({ row }) => {
       const curId = row.original.id
       return (
