@@ -37,6 +37,7 @@ import { equalBN } from '@/lib/utils'
 import { useCheckChainId } from '@/hooks/check-chainId'
 
 interface IMakerFeeRatioAmountProps {
+  accountAddress?: Address
   ownerContractAddress: Address
 }
 interface IConfirmInterface {
@@ -120,7 +121,7 @@ function RenderConfirmButton(props: IConfirmInterface) {
 }
 
 export function MakerFeeRatioAmount(props: IMakerFeeRatioAmountProps) {
-  const { ownerContractAddress } = props
+  const { accountAddress, ownerContractAddress } = props
   const mainnetTokenList: ChainInfoTokenInterface[] = getMainnetToken()
   const [amount, setAmount] = React.useState('')
   const [currentToken, setCurrentToken] = React.useState(
@@ -192,7 +193,10 @@ export function MakerFeeRatioAmount(props: IMakerFeeRatioAmountProps) {
           ></RenderConfirmButton>
         </CardFooter>
       </Card>
-      <DealerHistoryProfitWithdraw withdrawUser="Maker"></DealerHistoryProfitWithdraw>
+      <DealerHistoryProfitWithdraw
+        accountAddress={accountAddress}
+        withdrawUser="Maker"
+      ></DealerHistoryProfitWithdraw>
     </div>
   )
 }

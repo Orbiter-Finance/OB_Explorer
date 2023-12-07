@@ -58,6 +58,7 @@ import { defaultAbiCoder, keccak256 } from 'ethers/lib/utils'
 import { useCheckChainId } from '@/hooks/check-chainId'
 interface IDealerHistoryProfitWithdrawInterface {
   withdrawUser: 'Maker' | 'Dealer'
+  accountAddress?: Address
 }
 
 enum MergeValueType {
@@ -104,8 +105,7 @@ type FirstZeroBits = string[]
 export function DealerHistoryProfitWithdraw(
   props: IDealerHistoryProfitWithdrawInterface,
 ) {
-  const { withdrawUser } = props
-  const account = useAccount()
+  const { withdrawUser, accountAddress } = props
   const { resolvedTheme } = useTheme()
   const [loading, setLoading] = useState(false)
   const withdrawData = useRef<ListItem[]>([])
@@ -144,7 +144,7 @@ export function DealerHistoryProfitWithdraw(
 
   const { refetch: withdrawLockCheck }: any = useContractRead({
     ...contracts.orFeeManager,
-    args: [account.address],
+    args: [accountAddress],
     functionName: 'withdrawLockCheck',
     enabled: false,
   })
@@ -157,7 +157,7 @@ export function DealerHistoryProfitWithdraw(
     try {
       needLoading && setLoading(true)
       const profitIntoParams = {
-        address: account.address!,
+        address: accountAddress!,
       }
       const res =
         await submitter_getAllProfitInfo<ProfitInfoResult>(profitIntoParams)
@@ -281,7 +281,7 @@ export function DealerHistoryProfitWithdraw(
       smtLeaves.push({
         chainId: cToken.token_chain_id,
         token: cToken.token,
-        user: account.address!,
+        user: accountAddress!,
         amount: cToken.balance,
         debt: cToken.debt,
       })
@@ -361,7 +361,7 @@ export function DealerHistoryProfitWithdraw(
     const proofTokens = getProofTokens()
     const getProfitProofParams = {
       tokens: proofTokens,
-      user: account.address!,
+      user: accountAddress!,
     }
     const proofRes =
       await submitter_getProfitProof<ProfitProofResult>(getProfitProofParams)

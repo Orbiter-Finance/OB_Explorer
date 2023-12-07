@@ -7,7 +7,7 @@ import { usePromiseWithToast } from '@/hooks/promise-with-toast'
 import { predictMDCAddress } from '@/lib/utils'
 import { ConnectKitButton } from 'connectkit'
 import { Loader2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Address, Hex } from 'viem'
 import { useAccount, useContractWrite, usePublicClient } from 'wagmi'
 import { CheckList } from './check-list'
@@ -92,8 +92,7 @@ function useMDCDeploy(
   return { loading, hash, refetch }
 }
 
-function useCheckListData() {
-  const account = useAccount()
+function useCheckListData(accountAddress?: Address) {
   const [loading, setLoading] = useState(false)
   const [dealerList, setDealersList] = useState([] as IDealerItem[])
   const [chainInfoUpdatedsList, setChainInfoUpdatedsList] = useState(
@@ -108,7 +107,7 @@ function useCheckListData() {
     async () => {
       setLoading(true)
 
-      const res = await getCheckList(account.address!)
+      const res = await getCheckList(accountAddress!)
       const {
         data: { dealers = [], ebcRels = [], chainRels = [], mdcs = [] },
       } = res
@@ -116,15 +115,15 @@ function useCheckListData() {
       setEbcsRels(ebcRels)
       setChainInfoUpdatedsList(chainRels)
       setMdcs(mdcs)
-      setOwnerContractAddress(predictMDCAddress(account.address) as Address)
+      setOwnerContractAddress(predictMDCAddress(accountAddress) as Address)
       setLoading(false)
     },
     { reject: () => setLoading(false) },
   )
 
-  useEffect(() => {
-    if (account.address) refetch()
-  }, [account.address])
+  useMemo(() => {
+    if (accountAddress) refetch()
+  }, [accountAddress])
 
   return {
     refetch,
@@ -162,11 +161,14 @@ function useSpvBind() {
 }
 
 export function MakerMain() {
-  const account = useAccount()
+  // const account = useAccount()
+  const account = {
+    address: '0x8086061Cf07C03559fBB4AA58f191F9c4A5df2b2' as Address,
+  }
+
   const mdcInfo = useMDCInfo()
 
-  const checkListData = useCheckListData()
-
+  const checkListData = useCheckListData(account.address)
   const mdcDeploy = useMDCDeploy(mdcInfo.refetch, checkListData.refetch)
   const { bindSpvData, isSpvLoading } = useSpvBind()
 
@@ -205,7 +207,7 @@ export function MakerMain() {
       <CheckList checkListData={checkListData} />
 
       <div className="mt-4">
-        <RuleList />
+        <RuleList accountAddress={account.address} />
       </div>
       {/*<div className="flex">*/}
       {/*  <UserAmount*/}
@@ -219,6 +221,7 @@ export function MakerMain() {
       {/*</div>*/}
 
       <MakerFeeRatioAmount
+        accountAddress={account.address}
         ownerContractAddress={checkListData.ownerContractAddress}
       />
     </div>

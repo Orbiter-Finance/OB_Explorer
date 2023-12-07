@@ -51,9 +51,9 @@ import { cn, dateFormatStandard, equalBN, predictMDCAddress } from '@/lib/utils'
 import { BigNumberish, utils } from 'ethers'
 import lodash from 'lodash'
 import { useTheme } from 'next-themes'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Abi, Address } from 'viem'
-import { useAccount, useContractRead, useContractWrite } from 'wagmi'
+import { useContractRead, useContractWrite } from 'wagmi'
 import { RuleListImportExport } from './rule-list-import-export'
 import { RuleModify } from './rule-modify'
 
@@ -72,8 +72,7 @@ function rulesFindIndex(
   return index
 }
 
-function useLatestRules() {
-  const account = useAccount()
+function useLatestRules(accountAddress?: Address) {
   const [loading, setLoading] = useState(false)
   const [latestRules, setLatestRules] = useState<RuleInterface[]>([])
 
@@ -84,7 +83,7 @@ function useLatestRules() {
     setLoading(true)
 
     try {
-      const mdc = predictMDCAddress(account.address)
+      const mdc = predictMDCAddress(accountAddress)
       if (mdc) {
         const lrs = await getLatestRules(mdc, contracts.orEventBinding.address)
         setLatestRules(lrs)
@@ -96,14 +95,16 @@ function useLatestRules() {
     }
   })
 
-  useEffect(() => {
-    if (account.address) refetch()
-  }, [account.address])
+  useMemo(() => {
+    if (accountAddress) refetch()
+  }, [accountAddress])
 
   return { loading, latestRules, refetch }
 }
 
-export function RuleList() {
+export function RuleList(props: { accountAddress?: Address }) {
+  const { accountAddress } = props
+
   const [unSubmittedRules, setUNSubmittedRules] = useState<
     RuleOnewayInterface[]
   >([])
@@ -113,7 +114,7 @@ export function RuleList() {
   ])
   const [changedRules, setChangedRules] = useState<RuleOnewayInterface[]>([])
   const { checkChainIdToMainnet } = useCheckChainId()
-  const { latestRules, loading, refetch } = useLatestRules()
+  const { latestRules, loading, refetch } = useLatestRules(accountAddress)
   const [expanded, setExpanded] = useState<ExpandedState>({})
   useMemo(() => {
     const _rules = convertToOneways(latestRules)
@@ -389,8 +390,7 @@ export function RuleList() {
     getExpandedRowModel: getExpandedRowModel(),
   })
 
-  const account = useAccount()
-  const mdc = predictMDCAddress(account.address)
+  const mdc = predictMDCAddress(accountAddress)
   const { resolvedTheme } = useTheme()
 
   const { refetch: rulesRoot } = useContractRead<
@@ -409,7 +409,7 @@ export function RuleList() {
     address: mdc,
     abi: contracts.orMakerDepositImpl.abi,
     functionName: 'updateRulesRoot',
-    account: account.address,
+    account: accountAddress,
   })
 
   const submitModifies = async ({ enableTime }: { enableTime?: number }) => {
