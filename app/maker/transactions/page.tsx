@@ -1,4 +1,3 @@
-'use client'
 import TransactionsPage from '@/app/transactions'
 import { otherColumns } from './columns'
 

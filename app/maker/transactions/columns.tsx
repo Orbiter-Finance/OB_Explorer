@@ -1,3 +1,5 @@
+'use client'
+
 import { ListItem } from '@/app/transactions/fetchData'
 import { SendDialog } from '@/components/send-dialog'
 import { Button } from '@/components/ui/button'
