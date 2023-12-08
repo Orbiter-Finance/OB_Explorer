@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/table'
 import { PERCENT_RATIO_MULTIPLE } from '@/config/constants'
 import { thegraphBaseUrl } from '@/config/env'
-import { equalBN } from '@/lib/utils'
+import { cn, equalBN } from '@/lib/utils'
 import {
   ColumnDef,
   flexRender,
@@ -194,7 +194,12 @@ export function ManagerDealersMain() {
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
                     <>
-                      <TableRow className="border-b-0">
+                      <TableRow
+                        className={cn(
+                          'font-medium',
+                          row.original.boundMakers.length > 0 && 'border-b-0',
+                        )}
+                      >
                         {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id}>
                             {flexRender(
@@ -204,18 +209,20 @@ export function ManagerDealersMain() {
                           </TableCell>
                         ))}
                       </TableRow>
-                      <TableRow key={'sub_' + row.id}>
-                        <TableCell></TableCell>
-                        <TableCell colSpan={row.getVisibleCells().length - 1}>
-                          <DealerHistoryProfitWithdraw
-                            accountAddress={row.original.dealer}
-                            withdrawUser="Dealer"
-                            hideCard={true}
-                            hideInput={true}
-                          ></DealerHistoryProfitWithdraw>
-                          {/* {renderSubComponent({ subRows: row.original.subRows })} */}
-                        </TableCell>
-                      </TableRow>
+                      {row.original.boundMakers.length > 0 && (
+                        <TableRow key={'sub_' + row.id}>
+                          <TableCell></TableCell>
+                          <TableCell colSpan={row.getVisibleCells().length - 1}>
+                            <DealerHistoryProfitWithdraw
+                              accountAddress={row.original.dealer}
+                              withdrawUser="Dealer"
+                              hideCard={true}
+                              hideInput={true}
+                            ></DealerHistoryProfitWithdraw>
+                            {/* {renderSubComponent({ subRows: row.original.subRows })} */}
+                          </TableCell>
+                        </TableRow>
+                      )}
                     </>
                   ))
                 ) : (
