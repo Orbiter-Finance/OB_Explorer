@@ -103,7 +103,7 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
                 setStatus(Number(value))
               }}
             >
-              <SelectTrigger className="h-8 w-[140px]">
+              <SelectTrigger className="h-9 w-[140px]">
                 <SelectValue placeholder={'All'} />
               </SelectTrigger>
               <SelectContent side="top">
@@ -124,7 +124,7 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
               setVersion(value)
             }}
           >
-            <SelectTrigger className="h-8 w-[140px]">
+            <SelectTrigger className="h-9 w-[140px]">
               <SelectValue placeholder={'All'} />
             </SelectTrigger>
             <SelectContent side="top">
@@ -147,12 +147,14 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
           >
             <Input
               value={(startTime && startTime + '') || ''}
-              className="w-[200px]"
+              className="w-[220px]"
               readOnly
+              placeholder="Pick start time"
+              type="input"
             ></Input>
           </DatetimePicker>
         </div>
-        <div className="flex items-center mr-4">
+        <div className="flex items-center">
           <div className="mr-4">End Time:</div>
           <DatetimePicker
             value={dayjs(endTime).toDate()}
@@ -162,8 +164,10 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
           >
             <Input
               value={(endTime && endTime + '') || ''}
-              className="w-[200px]"
+              className="w-[220px]"
               readOnly
+              placeholder="Pick end time"
+              type="input"
             ></Input>
           </DatetimePicker>
         </div>
@@ -178,10 +182,13 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
                 setSourceChainId(value)
               }}
             >
-              <SelectTrigger className="h-8 w-[160px] mr-4">
+              <SelectTrigger className="h-9 w-[160px] mr-4">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="max-h-[400px]" side="top">
+                <SelectItem key="" value="">
+                  All
+                </SelectItem>
                 {chainList.map((item) => (
                   <SelectItem key={item.chainId} value={`${item.chainId}`}>
                     {item.name}
@@ -198,10 +205,13 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
                 setDestChainId(value)
               }}
             >
-              <SelectTrigger className="h-8 w-[160px] mr-4">
+              <SelectTrigger className="h-9 w-[160px] mr-4">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="max-h-[400px]" side="top">
+                <SelectItem key="" value="">
+                  All
+                </SelectItem>
                 {chainList.map((item) => (
                   <SelectItem key={item.chainId} value={`${item.chainId}`}>
                     {item.name}
@@ -225,7 +235,7 @@ export function DataTableSearchBar(props: DataTableSearchBarProps) {
               }
             }}
           >
-            <SelectTrigger className="h-8 w-[140px] mr-4">
+            <SelectTrigger className="h-9 w-[140px] mr-4">
               <SelectValue />
             </SelectTrigger>
             <SelectContent side="top">

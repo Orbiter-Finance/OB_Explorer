@@ -35,7 +35,7 @@ export default function TransactionsPage(props: TransactionsPagePops) {
   const [isHadNextPage, setIsHadNextPage] = React.useState<boolean>(false)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [status, setStatus] = React.useState<number>(StatusEnum.all)
-  const [version, setVersion] = React.useState<string>(Versions.all)
+  const [version, setVersion] = React.useState<string>(Versions.v3)
   const [sourceChainId, setSourceChainId] = React.useState<string>('')
   const [destChainId, setDestChainId] = React.useState<string>('')
   const [sourceHash, setSourceHash] = React.useState<string>('')
@@ -50,7 +50,7 @@ export default function TransactionsPage(props: TransactionsPagePops) {
 
   const resetSearchParams = () => {
     setStatus(StatusEnum.all)
-    setVersion(Versions.all)
+    setVersion(Versions.v3)
     setSourceChainId('')
     setDestChainId('')
     setSourceHash('')
