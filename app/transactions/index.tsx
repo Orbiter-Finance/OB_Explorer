@@ -17,6 +17,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { useAccount } from 'wagmi'
 import { getChainList } from '@/config/chain-list'
 import { ChainInterface } from '@/config/chain-list'
+import { useToast } from '@/components/ui/use-toast'
 
 const paginationPageSizeList = [10, 20, 30, 40, 50]
 
@@ -26,6 +27,8 @@ interface TransactionsPagePops {
 }
 
 export default function TransactionsPage(props: TransactionsPagePops) {
+  const { toast } = useToast()
+
   const { pageType = '', otherColumns = [] } = props
   const account = useAccount()
   const [data, setData] = React.useState<ListItem[]>([])
@@ -81,10 +84,18 @@ export default function TransactionsPage(props: TransactionsPagePops) {
           : currentPageIndex * params.pageSize + res.data.result.list.length
       setIsHadNextPage(curDataListCount > currentPageDataCount)
     } catch (error: any) {
-      setData([])
-      setPageCount(0)
-      setIsHadNextPage(false)
-      needLoading && setLoading(false)
+      // setData([])
+      // setPageCount(0)
+      // setIsHadNextPage(false)
+
+      if (needLoading) {
+        toast({
+          variant: 'destructive',
+          title: 'Fetch transactions failed.',
+          description: error.message,
+        })
+        setLoading(false)
+      }
     }
   }
 
