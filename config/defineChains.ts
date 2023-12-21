@@ -1,4 +1,4 @@
-import { defineChain } from "viem";
+import { defineChain } from 'viem'
 
 export const scroll = defineChain({
   id: 534_352,
@@ -59,6 +59,34 @@ export const scrollSepolia = defineChain({
     multicall3: {
       address: '0xca11bde05977b3631167028862be2a173976ca11',
       blockCreated: 9473,
+    },
+  },
+  testnet: true,
+})
+export const zkSyncSepoliaTestnet = defineChain({
+  id: 300,
+  name: 'zkSync Sepolia Testnet',
+  network: 'zksync-sepolia-testnet',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://sepolia.era.zksync.dev'],
+      webSocket: ['wss://sepolia.era.zksync.dev/ws'],
+    },
+    public: {
+      http: ['https://sepolia.era.zksync.dev'],
+      webSocket: ['wss://sepolia.era.zksync.dev/ws'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'zkExplorer',
+      url: 'https://sepolia.explorer.zksync.io/',
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xF9cda624FBC7e059355ce98a31693d299FACd963',
     },
   },
   testnet: true,

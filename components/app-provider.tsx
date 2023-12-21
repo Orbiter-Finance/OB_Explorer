@@ -13,8 +13,13 @@ import {
   arbitrumGoerli,
   optimismGoerli,
   zkSyncTestnet,
+  sepolia,
 } from 'wagmi/chains'
-import { scroll, scrollSepolia } from '@/config/defineChains'
+import {
+  scroll,
+  scrollSepolia,
+  zkSyncSepoliaTestnet,
+} from '@/config/defineChains'
 import { AppContext } from './app-context'
 import { useTheme } from 'next-themes'
 import { appMainnet } from '@/config/env'
@@ -24,9 +29,11 @@ const mainnetChains = [mainnet, arbitrum, optimism, zkSync, scroll]
 
 const testChains = [
   goerli,
+  sepolia,
   arbitrumGoerli,
   optimismGoerli,
   zkSyncTestnet,
+  zkSyncSepoliaTestnet,
   scrollSepolia,
 ]
 
