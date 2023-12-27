@@ -108,7 +108,6 @@ export default function TransactionsPage(props: TransactionsPagePops) {
   )
 
   React.useEffect(() => {
-    let interval: NodeJS.Timer
     queryTableData({
       status,
       pageIndex,
@@ -121,26 +120,6 @@ export default function TransactionsPage(props: TransactionsPagePops) {
       startTime,
       endTime,
     })
-    if (pageIndex === 1) {
-      interval = setInterval(() => {
-        queryTableData(
-          {
-            status,
-            pageIndex,
-            pageSize,
-            version,
-            sourceChainId,
-            destChainId,
-            sourceHash,
-            destHash,
-            startTime,
-            endTime,
-          },
-          false,
-        )
-      }, 2000)
-    }
-    return () => interval && clearTimeout(interval)
   }, [
     pageIndex,
     pageSize,
