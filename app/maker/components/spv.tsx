@@ -50,7 +50,7 @@ export function Spv(props: IUserAmountSpcProps) {
       const mdcs = bindSpvData?.mdcs
       const hadBindSpv: { [key: string]: Address[] } = {}
       mdcs.forEach((mdcsItem) => {
-        const bindSpvs = mdcsItem?.bindSPVs
+        const bindSpvs = mdcsItem?.currBoundSpvInfo
         bindSpvs.forEach((spvItem: BindSpv) => {
           if (hadBindSpv[spvItem.chainId]) {
             if (!hadBindSpv[spvItem.chainId].includes(spvItem.spv)) {
