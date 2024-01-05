@@ -5,7 +5,7 @@ export interface BindSpv {
   chainId: string
 }
 export type BindSPVs = {
-  bindSPVs: BindSpv[]
+  currBoundSpvInfo: BindSpv[]
 }
 export interface IBindSpvResult {
   data: {
@@ -18,8 +18,13 @@ export async function getBindSpvs(
 ): Promise<IBindSpvResult> {
   const body = JSON.stringify({
     query: `{
-      mdcs (where: {owner: "${accountAddress.toLowerCase()}"}) {
-        bindSPVs {
+      mdcs(
+        where: {owner: "${accountAddress.toLowerCase()}"}
+        orderBy: createblockTimestamp
+        orderDirection: desc
+        first: 1
+      ) {
+        currBoundSpvInfo {
           spv
           chainId
         }

@@ -42,21 +42,18 @@ interface DealerInfo {
 export async function fetchDealers() {
   const body = JSON.stringify({
     query: `{
-      dealers {
-        id
-        feeRatio
+      dealers{
+          id
+          feeRatio
       }
-      
       mdcs {
         id
         owner
-        mapping {
-          dealerMapping {
-            dealerAddr
-          }
+        columnArraySnapshot(orderBy: enableTimestamp, orderDirection: desc, first: 1) {
+            dealers
         }
       }
-    }`,
+  }`,
   })
 
   const { data } = await fetch(thegraphBaseUrl, {
@@ -74,7 +71,7 @@ export async function fetchDealers() {
     for (const item1 of data.mdcs) {
       if (
         boundMakers.findIndex((m) => equalBN(item1.owner, m)) === -1 &&
-        item1.mapping.dealerMapping.findIndex((d: any) =>
+        item1.columnArraySnapshot.dealers.findIndex((d: any) =>
           equalBN(d.dealerAddr, item.id),
         ) > -1
       ) {
