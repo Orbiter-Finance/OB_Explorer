@@ -50,7 +50,7 @@ export async function getCheckList(
         id
         feeRatio
       }
-      ebcRels {
+       ebcRels( where: { statuses: true }) {
         id
       }
       chainRels {
@@ -59,7 +59,7 @@ export async function getCheckList(
     }`,
   })
 
-  const res: ICheckListResult = await fetch(thegraphBaseUrl, {
+  const res = await fetch(thegraphBaseUrl, {
     method: 'POST',
     body,
     headers: {
@@ -68,5 +68,15 @@ export async function getCheckList(
     next: { revalidate: 60 },
   }).then((r) => r.json())
 
-  return res
+  res.data.mdcs = res.data.columnArraySnapshots.map((item: any) => {
+    return {
+      mapping: {
+        chainIdMapping: item.chainIds.map((chainId: any) => ({ chainId })),
+        dealerMapping: item.dealers.map((dealerAddr: any) => ({ dealerAddr })),
+        ebcMapping: item.ebcs.map((ebcAddr: any) => ({ ebcAddr })),
+      },
+    }
+  })
+
+  return res as ICheckListResult
 }

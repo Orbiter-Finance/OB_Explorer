@@ -88,12 +88,6 @@ export function CheckList(props: ICheckListData) {
 
   // The current mdc settings are presented first, if not, the one with index 0 is used.
   let targetMapping = mdcs?.[0]?.mapping || undefined
-  for (const item of mdcs) {
-    if (equalBN(item.id, ownerContractAddress)) {
-      targetMapping = item.mapping
-      break
-    }
-  }
   const dealerMapping = targetMapping?.dealerMapping || []
   const ebcMapping = targetMapping?.ebcMapping || []
   const chainIdMapping = targetMapping?.chainIdMapping || []
