@@ -9,7 +9,7 @@ import { BigNumber, BigNumberish, utils } from 'ethers'
 import { twMerge } from 'tailwind-merge'
 import { Address } from 'viem'
 import { toast } from '@/components/ui/use-toast'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { defaultAbiCoder, formatUnits, parseUnits } from 'ethers/lib/utils'
 import { chainList } from '@/config/chain-list'
 
 dayjs.extend(relativeTime)
@@ -76,7 +76,7 @@ export function predictMDCAddress(makerAddress: Address | undefined) {
   if (!makerAddress) return undefined
 
   const salt = utils.keccak256(
-    utils.solidityPack(
+    defaultAbiCoder.encode(
       ['address', 'address'],
       [orMDCFactoryAddress, makerAddress],
     ),

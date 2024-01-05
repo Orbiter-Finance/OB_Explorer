@@ -37,6 +37,7 @@ function useMDCInfo() {
       setLoading(true)
 
       const mdc = predictMDCAddress(account.address)
+
       if (mdc) {
         const code = await client.getBytecode({ address: mdc })
         setCode(code)

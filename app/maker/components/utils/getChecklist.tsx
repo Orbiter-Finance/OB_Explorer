@@ -33,7 +33,19 @@ export async function getCheckList(
   accountAddress: Address,
 ): Promise<ICheckListResult> {
   const body = JSON.stringify({
-    query: `{
+    query: `
+    {
+      columnArraySnapshots(
+        first: 1
+        orderBy: enableTimestamp
+        orderDirection: desc
+        where: { mdc_: { owner: "${accountAddress.toLowerCase()}" }}
+      ) {
+        dealers
+        ebcs
+        chainIds
+      }
+
       dealers {
         id
         feeRatio
@@ -43,20 +55,6 @@ export async function getCheckList(
       }
       chainRels {
         id
-      }
-      mdcs (where: {owner: "${accountAddress.toLowerCase()}"}) {
-        id
-        mapping {
-          chainIdMapping {
-            chainId
-          }
-          dealerMapping {
-            dealerAddr
-          }
-          ebcMapping {
-            ebcAddr
-          }
-        }
       }
     }`,
   })
