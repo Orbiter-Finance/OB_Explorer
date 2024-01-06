@@ -14,6 +14,7 @@ import { useAccount } from 'wagmi'
 import { getTokenInfoDecimal } from '@/lib/thegraphs/manager'
 import { useCheckChainId } from '@/hooks/check-chainId'
 import { equalBN } from '@/lib/utils'
+import { bountyWhitelistAddresses } from '@/config/env'
 
 interface ISendInterface {
   row: any
@@ -35,6 +36,10 @@ function RenderSendButton(props: ISendInterface) {
   const showSendButton =
     !row?.toHash && (row?.status === 97 || row?.status === 0)
   const { sendTransactionAsync } = useSendTransaction()
+
+  const atBountyWhitelist =
+    bountyWhitelistAddresses.findIndex((a) => equalBN(a, row.targetAddress)) >
+    -1
 
   const { writeAsync: transfer } = useContractWrite({
     address: row?.targetToken as Hash,
@@ -77,11 +82,22 @@ function RenderSendButton(props: ISendInterface) {
   }
 
   return showSendButton ? (
-    <SendDialog send={() => confirmFunc()}>
-      <Button variant="outline" onClick={beforeSend}>
-        Send
-      </Button>
-    </SendDialog>
+    <div>
+      <SendDialog send={() => confirmFunc()}>
+        <Button
+          variant="outline"
+          onClick={beforeSend}
+          disabled={atBountyWhitelist}
+        >
+          Send
+        </Button>
+      </SendDialog>
+      {atBountyWhitelist && (
+        <p className="mt-1 text-xs text-red-300">
+          Whitelist, no repayment required.
+        </p>
+      )}
+    </div>
   ) : (
     <span>-</span>
   )

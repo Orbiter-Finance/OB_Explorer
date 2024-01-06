@@ -1,23 +1,22 @@
 'use client'
+import { useToast } from '@/components/ui/use-toast'
+import { ChainInterface, getChainList } from '@/config/chain-list'
+import { ColumnDef } from '@tanstack/react-table'
 import * as React from 'react'
+import { useAccount } from 'wagmi'
 import { columns } from './components/columns'
 import { DataTable } from './components/data-table'
+import { DataTablePaginationCopy } from './components/data-table-pagination-copy'
+import { DataTableSearchBar } from './components/data-table-search-bar'
 import {
+  ITxListParams,
+  ListItem,
+  StatusEnum,
+  Versions,
   fetchData,
   statusList,
-  StatusEnum,
-  ListItem,
-  ITxListParams,
   versionList,
-  Versions,
 } from './fetchData'
-import { DataTableSearchBar } from './components/data-table-search-bar'
-import { DataTablePaginationCopy } from './components/data-table-pagination-copy'
-import { ColumnDef } from '@tanstack/react-table'
-import { useAccount } from 'wagmi'
-import { getChainList } from '@/config/chain-list'
-import { ChainInterface } from '@/config/chain-list'
-import { useToast } from '@/components/ui/use-toast'
 
 const paginationPageSizeList = [10, 20, 30, 40, 50]
 
