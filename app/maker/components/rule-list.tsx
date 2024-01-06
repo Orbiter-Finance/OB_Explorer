@@ -422,6 +422,8 @@ export function RuleList(props: { accountAddress?: Address }) {
       changedRules,
     )
     const root = utils.hexlify((await calculateRulesTree(ruleTwoways)).root)
+    console.log('root:', root)
+
     const { hash } = await updateRulesRoot({
       args: [
         enableTime,

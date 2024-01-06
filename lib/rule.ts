@@ -48,12 +48,12 @@ export interface RuleOnewayInterface {
 export function convertToOneways(rules: RuleInterface[]) {
   const ros: RuleOnewayInterface[] = []
   for (const rule of rules) {
-
-    const currentSubRows = rule.subRows.find((v) => {
-      const currentDate = new Date().getTime()
-      const enableTimestamp = Number(v.enableTimestamp) * 1000
-      return currentDate > enableTimestamp
-    }) || undefined
+    const currentSubRows =
+      rule.subRows.find((v) => {
+        const currentDate = new Date().getTime()
+        const enableTimestamp = Number(v.enableTimestamp) * 1000
+        return currentDate > enableTimestamp
+      }) || undefined
 
     // chain0 -> chain1
     if (rule.responseTime0 != 0) {
@@ -71,7 +71,7 @@ export function convertToOneways(rules: RuleInterface[]) {
         responseTime: rule.responseTime0,
         compensationRatio: rule.compensationRatio0 / PERCENT_RATIO_MULTIPLE,
         enableTimestamp: rule.enableTimestamp,
-        subRows: convertToOneways(currentSubRows ? [currentSubRows] : [])
+        subRows: convertToOneways(currentSubRows ? [currentSubRows] : []),
       })
     }
 
@@ -91,7 +91,7 @@ export function convertToOneways(rules: RuleInterface[]) {
         responseTime: rule.responseTime1,
         compensationRatio: rule.compensationRatio1 / PERCENT_RATIO_MULTIPLE,
         enableTimestamp: rule.enableTimestamp,
-        subRows: convertToOneways(currentSubRows ? [currentSubRows] : [])
+        subRows: convertToOneways(currentSubRows ? [currentSubRows] : []),
       })
     }
   }
@@ -101,7 +101,7 @@ export function convertToOneways(rules: RuleInterface[]) {
 export function mergeRuleOneways(
   rules: RuleInterface[],
   ros: RuleOnewayInterface[],
-  changedRules: RuleOnewayInterface[]
+  changedRules: RuleOnewayInterface[],
 ) {
   const updateRules = []
   for (const ro of ros) {
@@ -200,8 +200,8 @@ export function mergeRuleOneways(
 
 export function calculateRuleKey(rule: RuleInterface) {
   return utils.keccak256(
-    utils.solidityPack(
-      ['uint64', 'uint64', 'uint', 'uint'],
+    utils.defaultAbiCoder.encode(
+      ['uint', 'uint', 'uint', 'uint'],
       [rule.chainId0, rule.chainId1, rule.token0, rule.token1],
     ),
   )
